@@ -113,3 +113,7 @@ hosting, an identity provider, an email relay, real data and validated cost assu
 ## Authors
 
 Saswata Saha and Supratik Sarkar, IIM Lucknow, for the EXL × IIM Lucknow Live Action Project.
+
+## License
+
+[MIT](LICENSE) © 2026 Saswata Saha and Supratik Sarkar
