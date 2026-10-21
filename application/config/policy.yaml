@@ -1,0 +1,97 @@
+# ShiftSense PoC policy pack (simulated). Rules live here, not in code.
+seed: 42
+horizon:
+  start_date: "2026-10-05"     # a Monday
+  days: 14
+  interval_minutes: 30
+
+shifts:                          # start hour, span hours (incl. 1 h unpaid break), paid hours
+  Morning: {start: 6,  span: 9, paid: 8}
+  Day:     {start: 9,  span: 9, paid: 8}
+  Evening: {start: 14, span: 9, paid: 8}
+  Night:   {start: 22, span: 9, paid: 8, night: true}
+
+queues:
+  # peak = calls per 30 min at the daily peak; open/close = operating hours
+  Claims-EN:  {aht_sec: 360, sla_pct: 0.80, sla_sec: 20, peak: 13, open: 0, close: 24, sensitivity: 1.0}
+  Claims-HI:  {aht_sec: 420, sla_pct: 0.80, sla_sec: 30, peak: 5,  open: 9, close: 21, sensitivity: 0.8}
+  Banking-EN: {aht_sec: 300, sla_pct: 0.80, sla_sec: 20, peak: 11, open: 0, close: 24, sensitivity: 0.9}
+  Banking-HI: {aht_sec: 330, sla_pct: 0.80, sla_sec: 30, peak: 4,  open: 9, close: 21, sensitivity: 0.7}
+
+staffing:
+  shrinkage: 0.30
+  max_occupancy: 0.85
+  forecast_band_z: 1.28          # ~80% band
+  history_weeks: 6
+  history_noise: 0.10
+
+workforce:
+  n_agents: 50
+  primary_mix: {Claims-EN: 17, Claims-HI: 9, Banking-EN: 15, Banking-HI: 9}
+  cross_skill_share: 0.30
+  night_ok_share: 0.70
+  leave_share: 0.20             # share of agents with approved leave in the horizon
+
+rules:                            # hard constraints
+  min_rest_hours: 11
+  max_weekly_hours: 50
+  contracted_shifts_per_week: 5   # salaried minimum (reduced by leave days)
+  max_shifts_per_week: 6          # => at least 1 weekly off
+  max_nights_per_week: 4
+  max_ot_days_per_horizon: 1      # a 6th shift in a week is overtime
+  max_daily_hours: 11             # span incl. extensions
+  max_extension_hours: 2
+
+costs:                            # simulated INR
+  hourly_rate: 250
+  ot_multiplier: 2.0
+  redeploy_cost: 150              # context-switch / productivity loss
+  swap_cost: 200                  # inconvenience allowance
+  shortfall_penalty: 1000         # per head per 30-min interval x sensitivity (ranking only)
+
+optimizer:
+  time_limit_sec: 45
+  deterministic_time: 20
+  workers: 8
+  weights:                        # integer weights, scaled
+    under: 100
+    over: 8
+    ot_day: 60
+    fairness: 20
+    preference: 3
+    secondary_queue: 2
+    change: 40
+
+recovery:
+  no_show_rate: 0.03              # share of shift starts with an unannounced no-show (simulation)
+  approval_minutes: 2             # simulated TL approval
+  confirm_minutes: {redeploy: 1, extension: 3, swap: 5, open_shift: 5}
+  manual_detect_minutes: 15       # gap noticed when calls queue / at roll-call
+  manual_call_minutes: 6          # per phone call attempt
+  manual_accept_prob: 0.5
+  blast_weight: 250               # INR-equivalent per agent touched
+  tl_overdue_hours: 2             # critical alert undecided this long (simulated) -> Ops is told once
+  data_alert_days: 1              # after a data change: today + this many days get alerts; later days a re-plan
+  situation_review_hours: 2       # default reminder to update an open-ended situation (chosen per situation)
+
+requests:
+  green_buffer: 1                 # heads above requirement in every interval
+
+evidence:                         # assumptions for H1-H5 (simulated; validate with EXL)
+  scenarios: 8                    # injected disruptions per approach
+  absent_per_scenario: 4
+  detect_hour: 20                 # absences reported at 20:00 the evening before
+  manual_build_min_per_agent_week: 4   # analyst effort to hand-build a roster (assumption)
+  review_minutes: 30              # analyst review of the optimized roster
+  replan_day: 4                   # re-plan event: forecast revision + new leave
+  replan_demand_uplift: {Claims-EN: 1.12}
+  replan_new_leaves: 3
+
+governance:                       # discrepancy thresholds (signals for review, not proof)
+  min_requests: 3                 # minimum decided requests before comparing approval rates
+  approval_gap: 0.35              # agent approval rate minus peer rate under the same team lead
+  shortage_approvals: 2           # approvals that left the team short (Red) by one team lead
+  ot_repeat: 2                    # extra shifts / extensions for one agent in the fortnight
+  swap_pair_repeat: 2             # approved swaps between the same two agents
+  overrides: 3                    # rejections + modifications + escalations by one team lead
+  explanation_hours: 24           # simulated hours a team lead has to respond

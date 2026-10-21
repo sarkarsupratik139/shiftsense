@@ -1,0 +1,891 @@
+<title>ShiftSense Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a reference handbook — sticky contents rail on wide screens, one readable column, tables scroll in place.
+   Palette and type follow the ShiftSense app's own design tokens (ui_kit.TOKENS, IBM Plex). */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18202b; --muted:#566173; --rule:#dde2ea;
+  --accent:#1f5f8b; --accent-soft:#e6eff6; --code:#eef1f5;
+  --crit:#a3262a; --crit-bg:#fbeaea; --warn:#8a5a00; --warn-bg:#fdf3dc; --ok:#1d6b3c; --ok-bg:#e5f4ea;
+  --info:#1f5f8b; --info-bg:#e6eff6; --neu:#4a5363; --neu-bg:#eceff3;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-display:'IBM Plex Serif',Georgia,'Times New Roman',serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;
+  grid-template-columns:230px minmax(0,1fr);gap:40px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);
+  overflow:auto;font-size:13.5px;padding-right:6px}
+nav.toc b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:3px 8px;border-left:2px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{border-left-color:var(--accent);color:var(--accent);outline:none}
+main{min-width:0}
+header.cover{border-bottom:1px solid var(--rule);padding-bottom:22px;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,4.4vw,44px);line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.25;margin:56px 0 8px;padding-top:8px;
+  border-top:1px solid var(--rule);text-wrap:balance;scroll-margin-top:16px}
+h3{font-size:19px;font-weight:600;margin:30px 0 6px;scroll-margin-top:16px}
+h4{font-size:15px;font-weight:600;margin:20px 0 4px;color:var(--accent)}
+p,li{max-width:72ch}
+p{margin:8px 0}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+a{color:var(--accent)}
+.lede{font-size:18px;color:var(--muted);max-width:68ch}
+code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--code);padding:1px 5px;border-radius:4px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0 6px}
+.fact{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 12px}
+.fact b{display:block;font-size:22px;font-variant-numeric:tabular-nums;font-family:var(--f-display)}
+.fact span{font-size:13px;color:var(--muted)}
+.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.loop span{background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;padding:4px 10px;border-radius:999px}
+.loop i{color:var(--muted);font-style:normal}
+.note{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:6px;padding:10px 14px;margin:14px 0}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.tbl{overflow-x:auto;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;border-bottom:1px solid var(--rule)}
+th{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--neu-bg);font-weight:600}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;line-height:1.6}
+.crit{color:var(--crit);background:var(--crit-bg)} .warn{color:var(--warn);background:var(--warn-bg)}
+.ok{color:var(--ok);background:var(--ok-bg)} .info{color:var(--info);background:var(--info-bg)} .neu{color:var(--neu);background:var(--neu-bg)}
+dl.gloss{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:0;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+dl.gloss dt,dl.gloss dd{padding:8px 12px;border-bottom:1px solid var(--rule);margin:0}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{color:var(--ink)}
+.role{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:4px 18px 14px;margin:16px 0}
+.role .who{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13.5px;color:var(--muted);margin:6px 0 4px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:3px 9px}
+.flow i{color:var(--muted);font-style:normal}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:14px;color:var(--muted);font-size:13px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:8px}
+  nav.toc{position:static;max-height:none;border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:6px 10px 12px}
+  dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dt{border-bottom:none;padding-bottom:0}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Start here</b>
+  <a href="#what">What ShiftSense is</a>
+  <a href="#glossary">Terms explained</a>
+  <a href="#data">The simulated operation</a>
+  <a href="#screens">What every screen shares</a>
+  <b>Roles</b>
+  <a href="#agent">Agent</a>
+  <a href="#tl">Team Lead</a>
+  <a href="#ops">Ops (operations head)</a>
+  <a href="#analyst">Analyst</a>
+  <a href="#admin">Admin</a>
+  <a href="#hr">HR</a>
+  <a href="#datahub">Data input, output and flow</a>
+  <a href="#matrix">Who can do what</a>
+  <b>How things happen</b>
+  <a href="#workflows">Workflows, step by step</a>
+  <a href="#comms">Messages, notifications, email</a>
+  <a href="#decisions">Decision support and AI</a>
+  <a href="#rules">Rules and the recovery engine</a>
+  <a href="#truth">Recorded, planned, forecast</a>
+  <a href="#states">Status words</a>
+  <a href="#audit">Audit, history, integrity</a>
+  <a href="#evidence">Evidence (H1–H5)</a>
+  <b>Status</b>
+  <a href="#gaps-fixed">Gaps found and fixed</a>
+  <a href="#gaps-open">Gaps still open</a>
+  <a href="#readiness">Readiness</a>
+  <a href="#running">Running it</a>
+</nav>
+
+<main>
+<header class="cover">
+  <div class="eyebrow">EXL × IIM Lucknow · Live Action Project · Group 24 · Saswata Saha, Supratik Sarkar</div>
+  <h1>ShiftSense Handbook</h1>
+  <p class="lede">Every role, screen, workflow and rule in the ShiftSense proof of concept, in plain language. Each technical term is explained the first time it matters, and again in the glossary. The last sections list the gaps we found, how each was resolved, and what is still open.</p>
+  <p style="font-size:13.5px;color:var(--muted)">Current as of 18 Oct 2026 · 459 automated tests passing · all figures come from a simulated, seeded dataset, not EXL data.</p>
+</header>
+
+<!-- ============================================================ WHAT -->
+<h2 id="what">What ShiftSense is</h2>
+<p>ShiftSense helps a call centre keep the right number of skilled people on the phones at every moment. Call centres promise clients a <b>service level</b> (for example, "80% of calls answered within 20 seconds"). To keep that promise, the centre must have enough agents, trained for the right type of call, working at each half-hour of the day.</p>
+<p>ShiftSense does four things continuously:</p>
+<ul>
+  <li><b>Predicts</b> how many calls will arrive in each half-hour, and turns that into how many people are needed.</li>
+  <li><b>Plans</b> a two-week roster (who works which shift on which queue) that meets the need without breaking any working-time rule.</li>
+  <li><b>Detects</b> problems as they happen: someone is sick, doesn't show up, leaves early, or calls spike.</li>
+  <li><b>Recovers</b> by proposing the smallest, cheapest change that closes the gap, for example moving a trained colleague, swapping shifts or offering overtime. A person approves every change.</li>
+</ul>
+<div class="loop" aria-label="The ShiftSense loop"><span>Predict</span><i>→</i><span>Plan</span><i>→</i><span>Execute</span><i>→</i><span>Detect</span><i>→</i><span>Recover</span><i>→</i><span>Learn</span></div>
+<p><b>The question the proof of concept answers:</b> can ShiftSense build a better roster than a careful manual process, and restore coverage faster and at lower extra cost when the roster breaks, without ever breaking a hard working-time rule?</p>
+<div class="note"><b>Three promises that run through the whole product.</b>
+<ol>
+<li><b>People decide; the system recommends.</b> No roster changes unless an authorised person approves. The AI never decides anything.</li>
+<li><b>Nothing is invented.</b> A figure the system doesn't have (for example forecast accuracy, a budget, or a penalty in rupees) is shown as "Unavailable" or "Not configured", never estimated.</li>
+<li><b>Permissions are enforced on the server.</b> Hiding a button is never the only protection: every action is re-checked against the person's role, team and identity when it is performed.</li>
+</ol></div>
+
+<!-- ============================================================ GLOSSARY -->
+<h2 id="glossary">Terms explained</h2>
+<p>Grouped by topic. Where a term is used later in the handbook it means exactly what is written here.</p>
+
+<h3>Call-centre and staffing terms</h3>
+<dl class="gloss">
+<dt>Queue</dt><dd>A type of call, defined as process × language. There are four: <b>Claims-EN</b>, <b>Claims-HI</b> (Hindi), <b>Banking-EN</b>, <b>Banking-HI</b>. Every call waits in one queue.</dd>
+<dt>Primary queue / secondary queue</dt><dd>Each agent has one main (primary) queue. About 30% are also trained for one or more other (secondary) queues. An agent is never placed on a queue they are not trained for, anywhere in the system.</dd>
+<dt>Cross-skilled</dt><dd>Trained for more than one queue, so they can be moved to cover a gap elsewhere.</dd>
+<dt>Interval</dt><dd>A half-hour slot. All demand, staffing and coverage is calculated per queue per half-hour (48 intervals a day).</dd>
+<dt>Service level (SLA)</dt><dd>The promise to the client, written as "X% of calls answered within Y seconds". Here: Claims-EN and Banking-EN 80% in 20 s, open 24 h; Claims-HI and Banking-HI 80% in 30 s, open 09:00–21:00. SLA stands for service-level agreement.</dd>
+<dt>AHT (average handle time)</dt><dd>How long one call takes on average, talking plus wrap-up. Longer calls need more people.</dd>
+<dt>Forecast</dt><dd>The predicted number of calls per queue per half-hour. ShiftSense uses a simple, transparent method: the average of the same weekday over the last 4 weeks. There is no machine learning.</dd>
+<dt>Uncertainty band</dt><dd>A range around the forecast showing how far real calls might reasonably differ. Here it is ±1.28 standard deviations, which covers about 80% of normal days.</dd>
+<dt>Erlang C</dt><dd>A standard call-centre formula that turns "calls expected" plus "average call length" plus "service target" into "agents needed on the phones at once".</dd>
+<dt>Shrinkage</dt><dd>The share of paid time when an agent is not available for calls (breaks, training, meetings). Set at 30%, so the required number of people is raised to cover it.</dd>
+<dt>Required heads</dt><dd>The number of agents who should be working in a queue in a half-hour, after Erlang C and shrinkage.</dd>
+<dt>Coverage %</dt><dd>Of all the required people-time, the share the roster actually provides. 100% means no shortfall.</dd>
+<dt>People-hours</dt><dd>The unit for staffing gaps. One person short for one hour is 1 people-hour. One person short for one half-hour is 0.5.</dd>
+<dt>Gap / shortage</dt><dd>Required minus scheduled, where scheduled is lower. Measured in people-hours.</dd>
+<dt>Surplus</dt><dd>More people scheduled than required.</dd>
+<dt>SLA exposure</dt><dd>The gap weighted by how sensitive that queue is to missing its service target. A gap on a strict 20-second queue counts for more than the same gap on a 30-second queue.</dd>
+<dt>Severity</dt><dd>How urgent an alert is: <span class="pill crit">Critical</span> <span class="pill warn">At risk</span> <span class="pill ok">Healthy</span>. It combines the gap, SLA sensitivity, forecast uncertainty, skill scarcity (how few trained replacements exist), time until the gap starts, and whether any recovery option exists.</dd>
+<dt>Absenteeism</dt><dd>The share of scheduled shifts lost to absence or no-shows.</dd>
+</dl>
+
+<h3>Roster and rule terms</h3>
+<dl class="gloss">
+<dt>Roster</dt><dd>The schedule: for every agent and day, which shift (or none) and which queue.</dd>
+<dt>Shift</dt><dd>9 hours including a 1-hour break, so 8 paid. Morning 06–15, Day 09–18, Evening 14–23, Night 22–07. Shown as M, D, E, N.</dd>
+<dt>Extension</dt><dd>Staying up to 2 hours longer, or starting up to 2 hours earlier, on a shift. Counts as overtime.</dd>
+<dt>Overtime (OT)</dt><dd>Paid hours beyond the normal shift. Paid at 2× the hourly rate in this simulation.</dd>
+<dt>Hard rule</dt><dd>A rule that may never be broken: trained queues only, one shift a day, at least 11 hours rest between shifts, at most 50 paid hours and 6 shifts a week, approved leave respected, nights only for night-permitted agents (at most 4 a week), at most 1 overtime day a fortnight, at most an 11-hour working span with extensions of at most 2 hours.</dd>
+<dt>Soft preference</dt><dd>Something the optimiser tries for but may trade off, such as keeping people on their primary queue, fairness of nights and weekends, and personal shift preferences.</dd>
+<dt>Rule checker</dt><dd>An independent piece of code that re-checks a whole roster against every hard rule after every plan, every recovery and every change. If it finds a violation, the change is refused.</dd>
+<dt>Freeze window</dt><dd>Days that have already started cannot be re-planned or have requests approved for them.</dd>
+<dt>Optimiser (CP-SAT)</dt><dd>The planning engine. CP-SAT is Google's open-source solver (part of OR-Tools). It searches millions of possible rosters for the one that best balances shortage, overstaffing, overtime, fairness, preferences and number of changes, while obeying every hard rule. It is limited to 60 seconds.</dd>
+<dt>Manual heuristic baseline</dt><dd>A copy of how an analyst builds a roster by hand: apply the rules, fill the busiest half-hours first, spread skills, rotate nights and weekends, handle exceptions one by one. ShiftSense is measured against it.</dd>
+<dt>Plan / draft / validated / published / superseded</dt><dd>A <b>plan</b> is a version of the roster. A <b>draft</b> is a proposed one. <b>Validated</b> means the rule checker passed it. <b>Published</b> means it is the live roster everyone works to. When a new plan is published, the old one becomes <b>superseded</b> and is kept unchanged for history.</dd>
+<dt>Live roster</dt><dd>The published plan plus every approved change since (absences, swaps, approved fixes).</dd>
+<dt>Roster fingerprint / stale draft</dt><dd>A fingerprint is a short code that changes whenever the live roster changes. Every draft remembers the fingerprint it was built from. If the live roster changed since (for example an absence was approved), the draft is <b>stale</b> and publishing it is refused, so nobody's approved change is silently overwritten.</dd>
+</dl>
+
+<h3>Detection and recovery terms</h3>
+<dl class="gloss">
+<dt>Alert (incident)</dt><dd>A record created when something threatens coverage: an absence, a no-show, someone leaving early, or a call spike. It carries the gap, exposure, severity and a recommended fix.</dd>
+<dt>No-show</dt><dd>A scheduled agent who never arrived. In the live workspace this is only ever recorded by a person; a missing check-in alone never becomes a no-show.</dd>
+<dt>Call spike</dt><dd>Calls above forecast for a few hours, reported by Ops.</dd>
+<dt>Recovery engine</dt><dd>Code that builds candidate fixes for a gap, removes any that break a rule, simulates the rest, ranks them and recommends the best. Steps: Generate → Filter → Simulate → Rank → Approve → Re-solve.</dd>
+<dt>Cross-skill redeployment</dt><dd>Moving a trained agent from another queue for part of their shift. The queue they leave (the <b>donor queue</b>) must still meet its own requirement; this is called "protected".</dd>
+<dt>Shift swap</dt><dd>Two agents exchange shifts. The partner must be trained for the same queue, and rules are checked for both.</dd>
+<dt>Open shift</dt><dd>A shift offered to several trained agents. The first to accept gets it; the offer closes for the others.</dd>
+<dt>Blast radius</dt><dd>How many people, shifts and queues a fix touches. Smaller is better, because fewer people's plans are disturbed.</dd>
+<dt>Ranking</dt><dd>Fixes are ordered by extra cost, plus the service risk that would remain, plus blast radius. The smallest change that works is preferred.</dd>
+<dt>Escalation</dt><dd>When the team lead cannot close a gap, they send the alert to Ops for a decision.</dd>
+<dt>Residual / carried risk</dt><dd>Gap that remains after a decision. If Ops decides without adding cover (for example "accept the risk for this window"), the uncovered people-hours stay on record as carried risk and are never counted as covered.</dd>
+<dt>Time-to-cover</dt><dd>How long, in simulated minutes, from an alert being raised until the gap is actually closed in the roster.</dd>
+</dl>
+
+<h3>Product and technical terms</h3>
+<dl class="gloss">
+<dt>Live workspace</dt><dd>The real working copy: the published roster and genuine records made by people.</dd>
+<dt>Demo scenario</dt><dd>A separate copy loaded with a prepared story for demonstrations. Nothing done in it changes the live workspace. Every screen shows a banner while you view it. Its records carry a run id starting <code>sim-</code>.</dd>
+<dt>Run id</dt><dd>A label that ties every record (audit, notifications, history) to one workspace, so live and demo records never mix.</dd>
+<dt>Live clock / simulation clock</dt><dd>There is no real-time clock in the proof of concept. The <b>live clock</b> is moved forward by the Analyst so genuine check-in windows can open; it creates no events. The <b>simulation clock</b> exists only in the demo scenario and simulates attendance and no-shows.</dd>
+<dt>Check-in window</dt><dd>When an agent may check in for a shift: from 30 minutes before the start until 1 hour after it.</dd>
+<dt>Reminder states</dt><dd><b>Created</b> (the reminder exists) → <b>In inbox</b> (an in-app notification was written for an agent who has an account) → <b>Opened</b> (the agent opened that notification) → <b>Checked in</b> (the agent completed a valid check-in). Each is recorded separately; none implies another.</dd>
+<dt>Notification</dt><dd>A message inside ShiftSense, addressed to one person, one agent, or one role within a team. It can carry a priority, a deadline and an "Open" link to the related record.</dd>
+<dt>Thread / conversation</dt><dd>A message exchange attached to an agent, a request, an alert or a governance case. Only the members of that thread can read or post.</dd>
+<dt>Card</dt><dd>A focused pop-up window that holds everything needed for one decision: the facts, the options, the buttons and the conversation.</dd>
+<dt>Governance case</dt><dd>A review opened by Admin when a pattern looks unusual (for example one agent approved far more often than peers). It is a signal for review, never a finding of misconduct.</dd>
+<dt>Corrective action</dt><dd>A formal consequence after a governance review. Admin can request it, but only Ops can authorise it.</dd>
+<dt>Audit trail / hash chain</dt><dd>Every action writes an audit row (time, who, role, what, record, before, after, reason, outcome). Each row contains a fingerprint (SHA-256 hash) of the previous row, so changing or deleting any past row breaks the chain, and the break is reported with its row number.</dd>
+<dt>Append-only</dt><dd>Records are only ever added. A reversal (withdraw, revoke, reject) adds a new record; it never edits the old one.</dd>
+<dt>All-or-nothing change (transaction)</dt><dd>Every change is applied completely or not at all. If anything fails part-way, the workspace is restored exactly. A second click, or a decision on a record someone else just changed, returns a "Conflict" message instead of applying twice.</dd>
+<dt>Idempotency key</dt><dd>A unique label per email (record + recipient). Repeating an action never sends the same email twice.</dd>
+<dt>SMTP relay</dt><dd>The mail server that accepts outgoing email. "Sent" in ShiftSense means the relay accepted the message. It does not prove the email reached the inbox.</dd>
+<dt>Verified email</dt><dd>An address whose owner proved it is theirs by entering a 6-digit code that was emailed to it. Codes expire after 30 minutes and are stored only as a fingerprint.</dd>
+<dt>PBKDF2</dt><dd>A standard way to store passwords as a slow, salted fingerprint, so the password itself is never stored.</dd>
+<dt>SSO (single sign-on)</dt><dd>Signing in with the company's own login system. Not part of the proof of concept.</dd>
+<dt>Streamlit</dt><dd>The Python framework the app's screens are built with.</dd>
+<dt>SQLite</dt><dd>A single-file database. ShiftSense keeps everything in <code>data/shiftsense.db</code>.</dd>
+<dt>Seed / deterministic</dt><dd>The synthetic data is generated from a fixed starting number (seed 42), so every run produces exactly the same data and results.</dd>
+<dt>AppTest</dt><dd>Streamlit's tool for running screens automatically in tests, clicking buttons and reading what appears, without a browser.</dd>
+<dt>Health check / backup</dt><dd>Commands that check the database and configuration are sound, and create, verify or restore a copy of the database.</dd>
+</dl>
+
+<!-- ============================================================ DATA -->
+<h2 id="data">The simulated operation</h2>
+<div class="facts">
+  <div class="fact"><b>50</b><span>agents</span></div>
+  <div class="fact"><b>4</b><span>queues (process × language)</span></div>
+  <div class="fact"><b>5</b><span>teams, TL-1 to TL-5</span></div>
+  <div class="fact"><b>14 days</b><span>Mon 05 – Sun 18 Oct</span></div>
+  <div class="fact"><b>30 min</b><span>planning interval</span></div>
+  <div class="fact"><b>6</b><span>roles</span></div>
+</div>
+<ul>
+<li>Volumes follow daily and weekly patterns (busier mornings and weekdays). Call length (AHT) and service targets differ by queue.</li>
+<li>Each agent has availability, preferences and contract rules. About 30% are cross-skilled.</li>
+<li>Teams TL-3, TL-4 and TL-5 exist in the data but have no team-lead login in the demo. Their alerts stay visible to Ops, who picks them up when escalated or overdue.</li>
+<li>Simulated costs, from the policy file and still to be validated with EXL: ₹250 per hour, overtime at 2×, redeployment ₹150, swap ₹200. No SLA penalty or budget is invented. Where none is configured, the screen says "Not configured".</li>
+</ul>
+<h3>Accounts</h3>
+<p>The sign-in screen lists the demo accounts. They are fake, demo-only credentials stored as PBKDF2 fingerprints. Usernames: <code>aarav</code>, <code>sneha</code> (agents, team TL-1), <code>priya</code> (agent, TL-2), <code>tl1</code> (Rohit Verma, Team Lead TL-1), <code>tl2</code> (Fatima Khan, TL-2), <code>ops</code> (Anil Desai), <code>analyst</code> (Meera Iyer), <code>demo</code> (another Analyst account) and <code>admin</code> (Kiran Rao).</p>
+<p>Each account holds a name, employee ID, role, team, linked agent record (for agents), an optional work email, a contact preference ("In-app only" or "In-app and email") and an active flag. Every action re-checks the account. If Admin deactivates it or changes its role, team or linked agent, the person's next action is refused and they must sign in again.</p>
+
+<!-- ============================================================ SCREENS -->
+<h2 id="screens">What every screen shares</h2>
+<h3>Sidebar (left)</h3>
+<ul>
+<li><b>One collapse control</b> at the top: "Collapse navigation" / "Open navigation". It works with the keyboard, keeps your page, and on phones turns the sidebar into a drawer.</li>
+<li><b>Navigation for your role only.</b> The Analyst and Admin have several areas (listed under their roles). Agent, Team Lead and Ops each have one screen, so the sidebar shows the screen name and an <b>On this page</b> list. Each item jumps to that section; the section you are reading is highlighted.</li>
+<li><b>Workspace card:</b> Live workspace or Demo scenario, with its clock. For the Analyst it also shows any unpublished draft.</li>
+<li><b>Switch to demo scenario / Switch to live workspace</b> (only when a scenario is loaded): changes what you look at. Nothing is copied or changed.</li>
+<li><b>Account block:</b> initials, name, role and team, then <b>Refresh</b> (load changes other people made) and <b>Sign out</b>, an <b>Email</b> button (your address, whether it is verified, and code confirmation), and "Updated hh:mm:ss".</li>
+</ul>
+<h3>Top bar</h3>
+<p>Screen title, current simulated time and scope, a status pill (for example "2 to decide"), a "Synthetic data" or "Demo scenario" tag, and the <b>Notifications</b> button with an unread count.</p>
+<h3>Notification centre</h3>
+<ul>
+<li>Each notification shows a priority (<span class="pill crit">Critical</span> <span class="pill warn">Warning</span> <span class="pill ok">Normal</span> <span class="pill info">Info</span>), <b>Action required</b> when you must act, <b>Overdue</b> once its deadline passes, the sender, the time and a short text.</li>
+<li><b>Open</b> jumps straight to the related card (alert, request, case, conversation or check-in) and marks it read. <b>Mark read</b> acknowledges it without opening.</li>
+<li>Notifications belong to one workspace. Demo ones show only while you view the demo and carry a "Simulated" tag. The same event never creates two notifications. When the related item is resolved, so is the notification.</li>
+</ul>
+<h3>Cards, history and accessibility</h3>
+<ul>
+<li><b>Cards:</b> clicking a row, tile or button opens a focused pop-up with everything needed for one decision. Closing it returns you to where you were.</li>
+<li><b>History:</b> every role has a history view showing only what it is allowed to see. It has filters (period, type, search, order), pages of 25, a details view for any row, and a CSV export of exactly what you see (the export itself is logged).</li>
+<li><b>Accessibility:</b> visible keyboard focus, reduced motion when the device asks for it, status colours checked at 4.5:1 contrast or better in light and dark, a text summary and a data table for every chart, and headings and section links with accessible names. A full screen-reader test has not been done.</li>
+</ul>
+
+<!-- ============================================================ AGENT -->
+<h2 id="agent">Agent</h2>
+<div class="role">
+<div class="who"><span><b>Screen:</b> My work</span><span><b>Example:</b> aarav, Aarav K. (A01), team TL-1</span><span><b>Permissions:</b> request leave · report self · message</span></div>
+<p><b>Job.</b> Work their shifts and keep their own record right. Ask for time off or swaps, report when they can't come in, answer change requests from their team lead (such as covering a gap), and check in when reminded.</p>
+
+<h4>What the screen shows</h4>
+<ul>
+<li><b>Tiles:</b> On shift now or Next shift (time, shift, queue, "report by" 15 minutes before), hours this week against the 50-hour limit, shifts this week, items to answer, open requests.</li>
+<li><b>Buttons:</b> Request time off, Swap a shift, Can't come in, Leave now (only while on shift), Message team lead, Type a request, Report a record problem.</li>
+<li><b>Check in</b> (when a reminder is open): the shift, when check-in opens and closes, and <b>Check in now</b>.</li>
+<li><b>My shifts:</b> a week timeline (this week / next week), each day labelled scheduled, worked, left early, no-show, leave or off.</li>
+<li><b>Inbox:</b> the latest items. Those needing an answer show Review and a "respond before" day.</li>
+<li><b>My requests:</b> what was asked, its status, who acts next, the decision due date and any reason.</li>
+<li><b>My history:</b> only the agent's own records: schedule changes, requests and decisions, reminders and check-ins, notifications and their own messages.</li>
+</ul>
+
+<h4>Cards and what each one does</h4>
+<div class="tbl"><table>
+<thead><tr><th>Card</th><th>What the agent sees</th><th>What they can do</th></tr></thead>
+<tbody>
+<tr><td>Proposed change</td><td>The change as a before/after table by date, week hours after the change against the limit, overtime pay (if any), and "Rules checked: rest ≥ 11 h · skills".</td><td>Accept or Decline. Declining is fine: the team lead is told and automatically gets the next-best fix. If a colleague already took an open shift, it says "Taken by a colleague".</td></tr>
+<tr><td>Request time off</td><td>A day picker, then an instant coverage check: <span class="pill ok">Covered</span> approved at once, <span class="pill warn">Thin</span> team lead approves, <span class="pill crit">Short</span> team lead decides, with alternatives.</td><td>Pick the day or an alternative (another day, a swap, or a different shift), add a note, Send.</td></tr>
+<tr><td>Swap a shift</td><td>Their upcoming shift and up to 5 colleagues trained for the same queue. Rules are checked for both people.</td><td>Ask a colleague. The colleague agrees first, then the team lead approves.</td></tr>
+<tr><td>Can't come in</td><td>Their next shifts and a reason (Unwell, Family emergency, Other).</td><td>Report. Creates an alert for the team lead with a ready fix.</td></tr>
+<tr><td>Leave now</td><td>The current shift.</td><td>Confirm. The rest of the shift becomes a gap and the team lead gets an alert.</td></tr>
+<tr><td>My request</td><td>What was asked, its state, its coverage check, and any decline reason.</td><td>Withdraw while it is pending, or message the team lead about it.</td></tr>
+<tr><td>Check in</td><td>Opened from the reminder notification or the Check in section: the shift and its window.</td><td><b>Check in now</b>. The server checks it is their own shift, inside the window, and not already recorded. It works once. Opening the reminder alone records nothing.</td></tr>
+<tr><td>Report a record problem</td><td>A recent day, its current record, and a box for what looks wrong.</td><td>Send to team lead. Nothing changes until the team lead records a correction. The same report can't be sent twice.</td></tr>
+<tr><td>Type a request</td><td>A box for plain language, e.g. "I need Friday off for a wedding".</td><td>Opens the right form with the day filled in. Rules read the text first; the AI is asked only if the rules can't tell what is meant or which day.</td></tr>
+<tr><td>Conversation</td><td>A thread with their own team lead.</td><td>Read and post.</td></tr>
+</tbody></table></div>
+
+<h4>Decisions the agent owns</h4>
+<ul><li>Accept or decline a change addressed to them.</li><li>Agree or refuse a colleague's swap request.</li><li>Withdraw their own pending request.</li></ul>
+<h4>Changes the agent can make</h4>
+<ul><li>Submit time-off and swap requests (one open request per day).</li><li>Report their own absence or early leave.</li><li>Check in for their own shift.</li><li>Send messages and record-problem reports to their team lead.</li></ul>
+<h4>What the agent cannot do (refused on the server)</h4>
+<ul>
+<li>Report absence for anyone else, answer items addressed to someone else, or see other agents' requests or history.</li>
+<li>Approve anything, or see team, cost or planning dashboards.</li>
+<li>Check in for someone else, outside the window, or twice.</li>
+</ul>
+<h4>Receives</h4>
+<p>Change requests (cover, extend, swap, open shift), answers to their requests, revoked approvals, schedule updates when a new plan is published, check-in reminders (in-app, plus an email copy when email is configured and their address is verified), and messages from their team lead.</p>
+</div>
+
+<!-- ============================================================ TEAM LEAD -->
+<h2 id="tl">Team Lead</h2>
+<div class="role">
+<div class="who"><span><b>Screen:</b> My team (Team TL-x)</span><span><b>Example:</b> tl1, Rohit Verma, team TL-1</span><span><b>Permissions:</b> report absence · decide fixes · approve requests · message · send reminders</span></div>
+<p><b>Job.</b> Keep their own team covered today. Decide staffing alerts for their team, approve or decline time-off and swaps, report absences, send attendance reminders, confirm presence when an agent couldn't check in, and answer governance questions about their own decisions.</p>
+
+<h4>What the screen shows</h4>
+<ul>
+<li><b>Tiles:</b> alerts to decide, changes awaiting agents' answers, requests waiting, items escalated to Ops, on shift now, coverage tomorrow (planned), overdue items.</li>
+<li><b>Buttons:</b> Report absence, Send someone home (when anyone is on shift), Team schedule, and an Ask box.</li>
+<li><b>Attendance today (recorded events only):</b> shifts started, checked in, present (confirmed by team lead), no record yet (named), absent or no-show, still to start. "No record yet" means unknown, never assumed absent. A <b>Confirm an agent present…</b> button appears here.</li>
+<li><b>Deadlines:</b> action-required items with "due … in N h" or "overdue since …".</li>
+<li><b>Top priorities:</b> three tiles ranked by severity, exposure and time to the gap: gap, fix cost, % covered, first step, Review &amp; decide.</li>
+<li><b>All alerts</b> (active or all), <b>Time-off and swap requests</b> (pending, with an option to show approved upcoming ones that can still be revoked), <b>Governance questions about my decisions</b>, and <b>Team history</b>.</li>
+</ul>
+
+<h4>The alert decision card (where most decisions happen)</h4>
+<ul>
+<li>Severity, state, date, alert id and team. Tiles for gap (people-hours), SLA exposure, starts in, fix cost and gap covered.</li>
+<li>A staffing chart for the affected queue (required against scheduled) and any window still uncovered.</li>
+<li><b>Options compared:</b> the recommended fix against alternatives on coverage, cost, overtime and people touched, with why the others weren't chosen.</li>
+<li><b>Steps:</b> each concrete action. Donor queues are marked "stay at or above their own requirement (protected)".</li>
+<li>Confidence and the number of rule-checked candidates. <b>Changes and confirmations</b>: what each agent has answered so far.</li>
+<li><b>Why this fix · trade-offs:</b> the engine's own figures (gap, steps, cost, overtime, anything left uncovered), shown instantly with no AI.</li>
+<li>A conversation thread shared with Ops.</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Decision</th><th>What happens</th><th>Reason required</th></tr></thead>
+<tbody>
+<tr><td>Approve</td><td>Applies the fix. Affected agents get a Proposed change to confirm. The alert moves to "Awaiting agent confirmation", then "Resolved".</td><td>No</td></tr>
+<tr><td>Modify</td><td>Remove one or more steps and apply the rest. The remaining gap is recalculated.</td><td>Yes</td></tr>
+<tr><td>Reject</td><td>Discards this fix. The engine excludes those actions and proposes another. The alert stays with the team lead.</td><td>Yes</td></tr>
+<tr><td>Escalate</td><td>Sends the alert to Ops as a Critical, action-required notice due within 2 simulated hours (plus an email copy to Ops if configured).</td><td>Yes</td></tr>
+</tbody></table></div>
+
+<h4>Other cards</h4>
+<div class="tbl"><table>
+<thead><tr><th>Card</th><th>What the team lead can do</th></tr></thead>
+<tbody>
+<tr><td>Request</td><td>Approve or Decline a pending request (a reason is required to decline). Revoke an approved upcoming one, with a reason, before its day starts; the shift goes back and the agent is told.</td></tr>
+<tr><td>Report absence</td><td>Pick a day (today up to 5 days ahead) and team members. The new alert card opens at once, unless no cover is needed.</td></tr>
+<tr><td>Send someone home</td><td>Pick an on-shift agent. The rest of their shift becomes a gap with a fix.</td></tr>
+<tr><td>Team schedule</td><td>A 7-day grid with today's attendance. <b>Attendance reminder:</b> pick a shift for today or tomorrow, then Send reminder (or Send again, at most 3 per shift). It goes to the agent's ShiftSense inbox. The result shows <span class="pill ok">In inbox</span> or <span class="pill warn">Not delivered: no account</span>, plus the email status. A log lists each fact in its own column: in inbox, opened, checked in, email. <b>Message an agent</b> opens a thread.</td></tr>
+<tr><td>Confirm presence</td><td>For an own-team agent whose shift has started with no attendance record (for example, they couldn't check in): pick the agent, give a reason, Record correction. It never overwrites an existing record, is audited before and after, and shows as "confirmed by team lead", not as a self check-in.</td></tr>
+<tr><td>Follow-up</td><td>Write what was done (required), then Mark done. Ops is notified.</td></tr>
+<tr><td>Governance case</td><td>When Admin asks for an explanation: write it and submit. The case returns to Under Review.</td></tr>
+</tbody></table></div>
+<h4>What the team lead cannot do</h4>
+<ul>
+<li>Act on another team's alerts, requests, agents or history ("This alert belongs to another team").</li>
+<li>Decide their own request. Revoke after the day has started (a revoke must still pass the rule checker).</li>
+<li>Change the published plan, run re-planning, or manage accounts.</li>
+<li>Send a reminder after check-in has closed, or twice by accident.</li>
+<li>Overwrite someone else's decision: if another person decided first, the card shows "Conflict: this alert was already handled by …".</li>
+</ul>
+<h4>Deadline that watches the team lead</h4>
+<p>A Critical alert left undecided for 2 simulated hours is flagged to Ops once, as "Overdue at team lead". The 2 hours is a setting (<code>tl_overdue_hours</code> in <code>config/policy.yaml</code>).</p>
+</div>
+
+<!-- ============================================================ OPS -->
+<h2 id="ops">Ops (operations head)</h2>
+<div class="role">
+<div class="who"><span><b>Screen:</b> Operations</span><span><b>Example:</b> ops, Anil Desai, all teams</span><span><b>Permissions:</b> Ops decisions · approve requests · report spikes · view audit · all teams · message</span></div>
+<p><b>Job.</b> Run the next 72 hours across all teams. Decide what team leads could not fix, set follow-ups, answer the Analyst's risk flags, authorise or decline corrective action from governance, and watch recovery performance and cost.</p>
+
+<h4>What the screen shows (top to bottom)</h4>
+<ul>
+<li><b>Operations now (next 72 h):</b> required and scheduled people-hours, coverage %, shortage, SLA exposure, surplus, absenteeism over 7 days, escalations, items with team leads, alerts resolved.</li>
+<li><b>Decide first:</b> up to three alerts, always visible, each as Issue → Impact → Recommended action → Expected result. The action and figures are the recovery engine's own (no AI). <b>Open</b> goes straight to that alert. Escalated items say "Ops decision needed".</li>
+<li><b>Where to intervene first:</b> a ranked table (severity, issue, team, owner, start, hours to start, gap, exposure, cheapest full fix in ₹) and a risk matrix plotting exposure against time to start.</li>
+<li><b>Staffing variance</b> by half-hour for today or tomorrow: required (forecast), scheduled, checked in (recorded), and started with no record (unknown, never counted as present or absent).</li>
+<li><b>Follow-ups assigned</b> (status Open, Seen or Done), <b>Risk carried after Ops decisions</b>, and <b>Governance referrals</b> when there are any.</li>
+<li><b>Recovery performance:</b> alerts raised, covered, closed with risk carried, median time-to-cover, accepted as recommended (and modified or rejected counts), escalations, uncovered people-hours now. Forecast accuracy shows "Unavailable" because there is no actual call data.</li>
+<li><b>Demand vs supply</b> and a coverage heat-map by queue and day, with a watch list of queue-days under 95% covered.</li>
+<li><b>Cost</b> (simulated, configured rates): planned labour, overtime, recovery spend, the next 3 days projected, and budget ("Not configured" unless set). Unresolved gaps are shown in people-hours, with no rupee value, because no penalty rate is configured.</li>
+<li><b>Operations history</b> across all teams (no account administration, no private messages).</li>
+</ul>
+<h4>Decisions and their effect</h4>
+<div class="tbl"><table>
+<thead><tr><th>Card</th><th>Options</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td>Escalated issue</td><td>Approve extra overtime budget · Bring in cover from another site / agency · Accept the risk for this window · Return to team lead</td><td>The first three record Ops' decision and close the escalation. They do not change the roster (the card says so), and any uncovered people-hours stay visible as carried risk. The team lead is informed. Return reopens it with the team lead, due in 2 h. A reason is always required.</td></tr>
+<tr><td>Any issue</td><td>Assign a follow-up to the team lead, due in 2, 4, 8 or 24 h</td><td>The team lead gets a Warning, action-required notice that turns Overdue if missed.</td></tr>
+<tr><td>Report call spike</td><td>Queue, % above forecast (10–80%), duration (2–6 h)</td><td>Creates an alert for the owning team, or reports "Absorbed by current staffing".</td></tr>
+<tr><td>Analyst risk</td><td>Record a decision, or return to the Analyst</td><td>A documented reason is required.</td></tr>
+<tr><td>Governance case</td><td>Authorise corrective action · Decline · Resolve referral</td><td>Authorise → Resolved, and the team lead is told. Decline → back to Under Review. A reason is always required; Admin is notified.</td></tr>
+<tr><td>Activity log</td><td>Read only, download CSV</td><td>The full audit trail and whether the chain is intact.</td></tr>
+</tbody></table></div>
+<h4>What Ops cannot do</h4>
+<ul>
+<li>Approve, modify or reject a team's alert before it is escalated; those options belong to the owning team lead (Ops sees them read-only).</li>
+<li>Publish plans, edit accounts or rules, run the demo, import data, or open and close governance cases.</li>
+<li>See invented money: no penalty rate means no rupee figure, no budget means "Not configured".</li>
+</ul>
+</div>
+
+<!-- ============================================================ ANALYST -->
+<h2 id="analyst">Analyst</h2>
+<div class="role">
+<div class="who"><span><b>Screens:</b> Planning · Data hub · Demo</span><span><b>Example:</b> analyst, Meera Iyer (or demo)</span><span><b>Permissions:</b> re-plan · all teams · manage data · manage demo · run clocks · report situations · flag risk to Ops</span></div>
+<p><b>Job.</b> Forecasting, planning, publishing and demo handling. Understand demand and staffing, compare the live roster with the manual and optimised plans, test what-ifs, move a plan from draft to published, run the demo scenario and clocks, import data, and tell Ops about material risks. The Analyst does not take Team Lead or Ops decisions.</p>
+<p>Planning follows the workspace chosen in the sidebar (live or demo). Review &amp; publish always concerns the live roster. A draft made from a demo scenario is created for the live roster and labelled with the scenario it came from. Days already started are frozen.</p>
+
+<h4>Planning · Demand &amp; staffing</h4>
+<ul>
+<li>Pick a day and queue. Tiles: calls forecast; required, scheduled and productive people-hours (after 30% shrinkage); shortage; surplus; skilled agents (main and cover); SLA target.</li>
+<li>A chart of people per half-hour: forecast band, required, scheduled. A gaps table; clicking a row opens the interval card listing who is on the queue and who is trained but off.</li>
+<li>The forecast method is stated on screen: same weekday over the last 4 weeks, about an 80% band.</li>
+</ul>
+<h4>Planning · Roster &amp; optimization</h4>
+<ul>
+<li>Manual baseline vs optimised plan vs live roster over the open days.</li>
+<li>A hard-rule checklist from the independent rule checker, a heat-map of where the live roster is short (days × queues, in people-hours), and an agent picker that opens a card explaining each assignment.</li>
+</ul>
+<h4>Planning · What-if</h4>
+<ul>
+<li>Inputs: name, demand change by queue (−30% to +50%), extra absences, headcount change, maximum nights a week.</li>
+<li><b>Run scenario</b> re-optimises a copy; the live roster is untouched. It compares "Live plan", "keep plan" and "re-planned" on coverage, uncovered hours, exposure, overtime, cost, fairness and violations. Each finding is marked Proven or Likely.</li>
+<li><b>Use as draft</b> turns a result into a plan draft. The last 4 scenarios are kept on screen. Each run is written to the audit trail as a summary (full result sets are not stored).</li>
+</ul>
+<h4>Planning · Review &amp; publish</h4>
+<ul>
+<li>Plans list and <b>New draft</b> (re-optimise open days). Lifecycle: draft → Validate → validated → Publish → published; the previous plan becomes superseded. Discard is possible before publishing.</li>
+<li>A checklist and tiles comparing the draft with live (coverage, uncovered hours, exposure, overtime, labour cost, shifts changed and agents affected, violations). A change preview lists every changed shift.</li>
+<li>Publishing needs the box "I reviewed the changes and affected agents" ticked (checked on the server too) and zero violations, re-checked at the moment of publishing. Publishing is refused if the live roster changed since the draft was made (stale draft).</li>
+<li>Affected agents get their before → after shift; every team lead gets a summary.</li>
+<li><b>Roll back:</b> pick a superseded version, give a reason, Restore as draft. It then goes through validate, review and publish like any plan, keeps days already started, and is audited.</li>
+<li>If the optimiser fails, the reason is given in plain words (no valid roster, out of time, internal error) with the blocking rule and safe next steps. The live roster stays as it is.</li>
+<li>Also here: original plan vs live roster for past days, and the reproducible recovery benchmark (about 20 s).</li>
+</ul>
+<h4>Planning · History</h4>
+<p>Roster versions, forecast and demand revisions (reported spikes), and the planning history: drafts, validations, publications, restores, imports, demo and clock events, what-if runs and schedule changes.</p>
+<h4>Data &amp; demo · Demo scenario</h4>
+<ul>
+<li>A table says exactly what <b>Load demo story</b> adds (in the sandbox only), replaces (only a previous scenario) and preserves (the published roster and every live record). Load, Reload and Unload each need explicit confirmation and never touch live records.</li>
+<li><b>Legacy demo cleanup</b> (maintenance): removes records an old version of the demo once wrote into the live workspace. It always starts with a dry run listing what would be removed, restored, kept or left because it is uncertain. Execution is all-or-nothing, rule-checked and audited.</li>
+</ul>
+<h4>Data &amp; demo · Clocks</h4>
+<ul>
+<li><b>Live clock</b> (+30 min, +1 h, +4 h, +1 day): moves live time only, so genuine check-in windows open. It creates no attendance, no no-shows and no events.</li>
+<li><b>Simulation clock</b> (only with a scenario loaded): a no-show rate, then +1 h, +4 h, Next 08:00 or +1 day. Results are labelled simulated. Each simulated no-show raises one alert inside the scenario.</li>
+</ul>
+<h4>Data hub</h4>
+<p>Where the Analyst puts reference data in, follows every change and takes data out. Described in full in <a href="#datahub">Data input, output and flow</a>. It replaces the old whole-workspace Import.</p>
+<h4>What the Analyst cannot do</h4>
+<ul><li>Publish with violations or without the review confirmation, or change started days.</li><li>Decide alerts or requests, take Ops decisions, run governance, send reminders, confirm attendance or edit accounts.</li><li>Publish a demo scenario: only a draft for the live roster can be published.</li></ul>
+</div>
+
+<!-- ============================================================ ADMIN -->
+<h2 id="admin">Admin</h2>
+<div class="role">
+<div class="who"><span><b>Screen:</b> Administration</span><span><b>Example:</b> admin, Kiran Rao</span><span><b>Permissions:</b> governance · view audit · all teams · manage accounts</span></div>
+<p><b>Job.</b> Oversight, governance, accounts and integrity. Admin reviews records and decisions, scans for patterns that deserve a closer look, runs review cases, checks the audit trail, and maintains accounts. Admin does not run operations. The top bar reads "oversight and governance · read-only operations".</p>
+<h4>Week</h4>
+<ul>
+<li>Filters: week, team, queue, agent. <b>Recorded so far:</b> only real events, such as shifts with attendance recorded, started shifts with no record, attendance rate ("Unavailable" until something is recorded, and always shown with its sample), no-shows, absences, open exceptions, schedule changes.</li>
+<li><b>Expectation this week</b> in a separate box marked FORECAST / PREDICTION — NOT ACTUAL RESULTS. These figures never enter the recorded totals.</li>
+<li>A schedule grid for every agent and day (a row opens the agent's week and every change to it), day detail, exceptions, the <b>Weekly report (Excel)</b>, and <b>Week in brief</b>: five lines from the report's own figures (no AI).</li>
+</ul>
+<h4>Decisions</h4><p>The read-only decision log, filterable by team, role, decided by and decision type: who decided what, when and why.</p>
+<h4>Governance</h4>
+<p><b>Scan for discrepancies</b> applies thresholds from <code>config/policy.yaml</code> and opens one case per new pattern. Repeating a scan never creates duplicates.</p>
+<div class="tbl"><table>
+<thead><tr><th>Pattern flagged</th><th>Default threshold</th></tr></thead>
+<tbody>
+<tr><td>One agent approved far more often than peers under the same team lead</td><td>≥ 3 decided requests and a gap of ≥ 35 percentage points</td></tr>
+<tr><td>Approvals while the coverage check was Short</td><td>≥ 2 such approvals</td></tr>
+<tr><td>Repeated overtime for one agent</td><td>≥ 2 extra shifts or extensions in the fortnight</td></tr>
+<tr><td>Repeated swap pairs</td><td>≥ 2 approved swaps between the same two agents</td></tr>
+<tr><td>Frequent overrides by one team lead</td><td>≥ 3 rejections, modifications or escalations</td></tr>
+</tbody></table></div>
+<div class="flow"><span>Flagged</span><i>→</i><span>Under Review</span><i>→</i><span>Explanation Requested</span><i>→</i><span>Referred to Operations</span><i>→</i><span>Action Required</span><i>→</i><span>Resolved</span><i>→</i><span>Closed</span></div>
+<p>Admin actions: Acknowledge (becomes reviewer), Add note, Request explanation (due in 24 simulated hours; the team lead is notified), Refer to Operations, Request corrective action (Ops must authorise), Mark resolved, Close, Dismiss. Every action except Acknowledge and Add note needs a reason. Transitions are validated (for example, a Flagged case must be acknowledged before an explanation can be requested).</p>
+<h4>People &amp; accounts</h4>
+<ul>
+<li>Searchable list: username, name, employee ID, role, team, agent, masked email with verified/unverified, contact preference, status.</li>
+<li>Account card: name, employee ID, role, agent record (the team follows from the workforce data), team (for team leads), work email (optional), contact preference, active, and an initial password for new accounts.</li>
+<li>Usernames, employee IDs and emails must be unique. One active account per agent and one active team lead per team. Changing an email makes it unverified again. Role changes and deactivation need a reason. Every save is versioned; a stale save is refused with "Conflict: … reload". Changes are audited with emails masked.</li>
+<li>Role permissions are shown read-only (set by the platform owner).</li>
+</ul>
+<h4>Audit &amp; integrity</h4>
+<ul><li>The full history view, with the audit chain status ("Audit chain verified" or "broken at row N").</li><li>Schedule change history (Applied, Reversed · approval revoked, Reversed · agent declined, Baseline), with full before/after per change and CSV export.</li><li>Integrity checks (live roster rules, last change saved, logins match data, team-lead teams exist, open drafts, AI on/off) and read-only rules and cost assumptions.</li></ul>
+<h4>What Admin cannot do</h4>
+<ul>
+<li>Change rosters, approve or decline requests, decide alerts, confirm attendance, run what-ifs, clocks, the demo or imports, or publish plans.</li>
+<li>Create or promote anyone to Admin, change their own role, or deactivate themselves. Edit permissions, rules or costs.</li>
+<li>Alter or delete audit history, or impose corrective action alone.</li>
+</ul>
+</div>
+
+<!-- ============================================================ DATA HUB -->
+<h2 id="datahub">Data input, output and flow</h2>
+<p><b>Reference data</b> is the information ShiftSense plans from: employees, employment contracts, client service levels, company rules, leave, call volumes and special situations. Every change to it is a new <b>version</b> with an <b>effective date</b> (the day it starts to count); nothing is overwritten. The full agreement behind this is the <a href="https://claude.ai/artifact/MtqWbwXzhfc6xHuuur5UkB">Data Blueprint</a>.</p>
+<h3>Base input data</h3>
+<p>The minimum data ShiftSense needs to run, shipped as seven ordinary files in <code>basedata/small/</code> (default: 50 employees, 5 teams, 4 queues for 2 fictional clients) and <code>basedata/full/</code> (120 employees in 8 teams, 6 queues for 3 clients), each with 3 contract types (Full-time 40h, Part-time 24h, Evening-Night 40h), 23 rules, leave, 8 weeks of half-hourly call volumes and 2 example situations. They load through the same converter as any upload. <b>Load base data</b> stores them; <b>Rebuild live workspace from reference data</b> builds a new optimised roster from them and makes it live (a verified backup is taken first, and it needs explicit confirmation). After a rebuild, every data change flows into the live roster automatically. Any record can later be replaced or removed.</p>
+<h3>Putting data in</h3>
+<div class="tbl"><table>
+<thead><tr><th>Way</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>Upload a file</td><td>Excel or CSV in any layout: title rows, extra columns, several sheets, one column per date (for leave).</td></tr>
+<tr><td>Paste</td><td>A table copied from Excel or Sheets, or plain text such as "A07 and Sneha G. are off 12 Oct to 14 Oct for training".</td></tr>
+<tr><td>Type it in</td><td>A form per kind of data, with drop-downs, mandatory fields marked *, and the same checks as a file.</td></tr>
+<tr><td>Roster grid</td><td>A schedule with one column per date (M, D, E, N, WO, L, or "M · Claims-EN") becomes a draft plan to validate, review and publish.</td></tr>
+<tr><td>Attendance feed</td><td>Login and logout times from badge or phone systems: lateness to the minute; never overwrites a check-in or confirmation; a missing login never becomes a no-show.</td></tr>
+<tr><td>Round-trip template</td><td>Download today's data as a filled Excel file (Downloads), edit it, upload it back; only changed rows count.</td></tr>
+</tbody></table></div>
+<p><b>Smart conversion.</b> Rules run first: remembered column matches, exact names, known synonyms ("Emp Code", "Process", "Week Off"), close spellings, and value formats (dates in any common form with day first, times like 6.30 pm, durations like 6 min, Y/N/✓, lists separated by ; , /, "80/20" service levels, "24x7" hours, queue names like "claims english"). The <b>AI</b> is asked only for columns or free text the rules cannot read, and by default only for non-personal data such as call volumes and situations (<code>SHIFTSENSE_AI_CONVERT=nonpersonal</code>; <code>on</code> also allows employee and leave data once EXL agrees, <code>off</code> disables it); it receives headers and up to three sample rows, or the pasted text. It never invents a value and never applies anything.</p>
+<p><b>The check screen</b> shows how each column was matched (and lets you change it), every converted record in ShiftSense's format, and every finding as <span class="pill crit">Error</span> (row held back), <span class="pill warn">Check</span> (confirm it is intended) or <span class="pill info">Corrected</span> (safely fixed and shown). Held-back rows download as a "rows to fix" Excel file with a <i>What to fix</i> column. Mandatory fields are always enforced. Employees, leave and call volumes can apply good rows while bad rows wait; contracts, service levels and rules are all-or-nothing.</p>
+<h3>How a change spreads</h3>
+<div class="flow"><span>Submit</span><i>→</i><span>Impact preview</span><i>→</i><span>Approve (where needed)</span><i>→</i><span>Apply on the effective date</span><i>→</i><span>Re-check roster and staffing need</span><i>→</i><span>Alerts / re-plan recommendation / notices</span><i>→</i><span>Log</span></div>
+<ul>
+<li><b>Impact preview:</b> new, changed and removed records; alerts that today and tomorrow would get; later shifts that would be released; staffing gap before and after.</li>
+<li><b>Today and tomorrow:</b> shifts a change makes impossible (a removed skill, a leaver, a stricter contract, a disaster) become alerts for the team lead with a ready fix, exactly like an absence. A rise in staffing need (stricter service level, campaign, outage) where the roster is now short becomes an alert too.</li>
+<li><b>Later days:</b> impossible shifts are released and the Analyst gets a <b>Re-plan recommended</b> notice; the new draft still goes through validate, review and publish.</li>
+<li><b>Never touched:</b> shifts already started. A limit tightened mid-week applies from now on; nights already worked are history.</li>
+<li><b>Future-dated changes</b> are stored as scheduled and take effect when the live clock reaches their date.</li>
+<li><b>Adjustable timings:</b> how many days ahead get alerts after a data change (0–3, default 1) is a rule; each open-ended situation has its own reminder interval (1, 2, 3, 4, 6, 8 or 12 hours); follow-ups take 2, 4, 8 or 24 hours; the team-lead deadline before Ops is told is a rule.</li>
+<li><b>Drop folder:</b> HR and telephony exports placed in <code>data/inbox/&lt;kind&gt;/</code> are processed from the app with one click (applied at once), or by a night-time server run (<code>python -m shiftsense.dropfolder run --as &lt;user&gt;</code>), which stages them for the app to apply on its next refresh. Usable rows apply, held-back rows come back as a rows-to-fix file, and nothing is deleted.</li>
+<li><b>Dates:</b> each upload or paste says whether its dates are day first (default) or month first.</li>
+<li><b>Approvals:</b> contract changes from HR and rule or service-level changes from the Analyst need Ops; a team lead's proposal needs HR; governance thresholds proposed by Admin need Ops; continuity mode needs Ops. Nobody approves their own change, and a rejection needs a reason.</li>
+</ul>
+<h3>Contracts</h3>
+<p>Each employee links to a contract. A contract can only be stricter than the company-wide rules: fewer weekly hours or shifts, fewer nights, no nights, only some shift types, more rest. The optimiser, the manual baseline, recovery and the independent rule checker all apply each person's own contract.</p>
+<h3>Situations</h3>
+<p><b>Quick report:</b> type a few sentences ("Dialler down for Claims-EN since 10:30, 40% capacity lost"); the form fills itself with what the text says and asks for the rest. Rules read it; the AI helps only if the rules recognise nothing. Active situations can be <b>updated</b> as they develop (end, effect, reminder interval), appear on a <b>calendar</b> with scheduled data changes, and show as a <b>banner</b> on every screen while they affect today. A <b>temporary rule exception</b> (for example two overtime days in a festival week) is a situation type too: Ops approves it and it lapses at its end.</p>
+<p>Holiday, planned or unplanned outage, protest or strike, disaster, campaign, training or meeting, temporary rule exception, other. Only what is always known is mandatory (what, where, when it starts); the end may be "not known yet". Effects: volume change, queues closed, capacity lost, handle time change, people unavailable. In a disaster, affected teams are marked unavailable and never asked to cover; Ops can lower the service target for a period (<b>continuity mode</b>, which needs an end date). In a protest nobody is assumed absent unless named or expected absence is 100%. Active situations are listed for Ops and the Analyst and can be closed.</p>
+<h3>Taking data out</h3>
+<div class="tbl"><table>
+<thead><tr><th>Role</th><th>Downloads</th></tr></thead>
+<tbody>
+<tr><td>Agent</td><td>My shifts as a calendar file (phone or Outlook), my schedule (Excel), my history (CSV)</td></tr>
+<tr><td>Team Lead</td><td>Team pack (schedule grid, shift list, attendance this week, requests), printable team schedule, team history</td></tr>
+<tr><td>Ops</td><td>Daily operations brief, service level per client contract (planned coverage; actual calls, forecast error and service level achieved where imported), history</td></tr>
+<tr><td>Analyst</td><td>Published roster, forecast and requirement per half hour, operations brief, service level per client, printable roster and brief, change log, today's reference data as templates</td></tr>
+<tr><td>Admin</td><td>Data change log, audit history</td></tr>
+</tbody></table></div>
+<p>Every Excel file starts with a <b>Read me</b> sheet: what it is, when produced, live or demo, source, what kind of figures (recorded, planned, forecast) and what each column means. Headers are frozen and formatted.</p>
+<h3>Where data is stored</h3>
+<p>Everything (workspace, notifications, messages, accounts, history, reference data and the audit trail) goes through one data layer that serves SQLite (the demo file) or PostgreSQL (the pilot), chosen by <code>SHIFTSENSE_DATABASE_URL</code>. The whole test suite runs on both. Several app servers can share the database: each save carries the version it started from, so a save made after someone else's is refused with a clear message instead of overwriting. The live roster and plan list are also kept as plain table rows for reporting. The database itself refuses any edit or deletion of the audit trail. PostgreSQL backups, restore drills and the move from SQLite are built in (see the runbook).</p>
+<p><b>Base pack sizes:</b> small (default; 50 employees, 5 teams, 4 queues for 2 clients, like the current demo data) and full (120 employees, 8 teams, 6 queues for 3 clients). The live workspace stays on its current small data until someone chooses to rebuild.</p>
+
+<!-- ============================================================ HR -->
+<h2 id="hr">HR</h2>
+<div class="role">
+<div class="who"><span><b>Screen:</b> People data</span><span><b>Example:</b> hr, Nisha Menon</span><span><b>Permissions:</b> manage people data · all teams</span></div>
+<p><b>Job.</b> Keep people data right: employee details, employment contracts and leave. Decide team leads' proposals about their agents. HR does not plan, decide alerts or run operations.</p>
+<h4>What the screen shows</h4>
+<ul>
+<li><b>People overview:</b> headcount, active, on notice, contracts in use, proposals to decide; headcount by team and contract; who joins or leaves in the plan period.</li>
+<li><b>Update people data:</b> the drop folder and the same add-or-update screen as the Data hub (upload, paste, or type; check; preview impact; submit), limited to employees, contracts and leave.</li>
+<li><b>Proposals and changes:</b> team leads' proposals to accept or reject (a reason is needed to reject), and every people-data change with its effect.</li>
+<li><b>People downloads:</b> today's employees, contracts and leave as Excel templates to edit and upload back.</li>
+</ul>
+<h4>How it fits with the others (kept simple)</h4>
+<ul>
+<li>HR's employee and leave changes apply straight away; contract changes go to Ops, because they change cost and coverage.</li>
+<li>The <b>Analyst is told about every applied HR change</b> with its effect on the plan (alerts raised, shifts released, re-plan recommended); when a re-plan is needed the notice is a Warning that asks for action.</li>
+<li>Team leads send agent proposals to HR. Agents still set their own shift and day-off preferences.</li>
+<li>The Analyst keeps service levels (with Ops), rules (with Ops), call volumes, situations, the base pack and the rebuild.</li>
+</ul>
+<h4>What HR cannot do</h4>
+<ul><li>Change service levels, rules or call volumes; plan, publish or rebuild; decide alerts or requests; manage accounts or governance.</li></ul>
+</div>
+
+<!-- ============================================================ MATRIX -->
+<h2 id="matrix">Who can do what</h2>
+<p>Every row is checked on the server on every action (a 105-case automated test calls each function as each role, plus forged-identity checks).</p>
+<div class="tbl"><table>
+<thead><tr><th>Action</th><th>Agent</th><th>Team Lead</th><th>Ops</th><th>Analyst</th><th>Admin</th></tr></thead>
+<tbody>
+<tr><td>Report absence / leave now</td><td>Self</td><td>Own team</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Answer a proposed change; check in; report a record problem</td><td>Own</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Request time off or swap; withdraw</td><td>Own</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Approve / Modify / Reject / Escalate an alert</td><td>—</td><td>Own team</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Approve / decline / revoke requests</td><td>—</td><td>Own team, not self</td><td>All teams, not self</td><td>—</td><td>—</td></tr>
+<tr><td>Send attendance reminder; confirm presence</td><td>—</td><td>Own team</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Decide escalations; return; follow-ups; Analyst risks; call spikes</td><td>—</td><td>—</td><td>Yes</td><td>—</td><td>—</td></tr>
+<tr><td>Authorise corrective action</td><td>—</td><td>—</td><td>Yes</td><td>—</td><td>—</td></tr>
+<tr><td>Draft / validate / publish / restore a plan; what-if</td><td>—</td><td>—</td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td>Flag a risk to Ops</td><td>—</td><td>—</td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td>Demo load / unload; clocks; import; legacy cleanup</td><td>—</td><td>—</td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td>Governance scan and cases</td><td>—</td><td>Explain if asked</td><td>Referrals</td><td>—</td><td>Yes</td></tr>
+<tr><td>Employees, contracts, leave (people data)</td><td>Own preferences</td><td>Propose own-team changes (HR decides)</td><td>Approve contracts</td><td>Read, notified of every change</td><td>—</td></tr>
+<tr><td>HR</td><td colspan="5">Puts in employees, contracts and leave; decides team leads' proposals; downloads people data</td></tr>
+<tr><td>Volumes, rules, base data, rebuild</td><td>—</td><td>—</td><td>Service levels; approve rules</td><td>Yes</td><td>Propose governance thresholds</td></tr>
+<tr><td>Approve contract, rule, service-level changes</td><td>—</td><td>—</td><td>Yes</td><td>—</td><td>—</td></tr>
+<tr><td>Report a situation</td><td>—</td><td>Training, protest (own team)</td><td>All types</td><td>Holiday, campaign, outage, training, other</td><td>—</td></tr>
+<tr><td>Own shift and day-off preferences</td><td>Yes</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Create / edit accounts</td><td>—</td><td>—</td><td>—</td><td>—</td><td>Business roles only</td></tr>
+<tr><td>View audit trail</td><td>—</td><td>—</td><td>Yes</td><td>—</td><td>Yes</td></tr>
+<tr><td>History scope</td><td>Own records</td><td>Own team</td><td>All teams</td><td>Planning</td><td>Everything</td></tr>
+<tr><td>Messaging</td><td>Own threads</td><td>Team threads</td><td>Alert and case threads</td><td>—</td><td>Case threads</td></tr>
+<tr><td>Verify own email</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Edit audit history or permissions</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ WORKFLOWS -->
+<h2 id="workflows">Workflows, step by step</h2>
+
+<h3>A. Absence → cover</h3>
+<div class="flow"><span>Agent: Can't come in (or no-show / leave now / sent home)</span><i>→</i><span>Gap and severity calculated</span><i>→</i><span>Fixes generated, filtered, simulated, ranked</span><i>→</i><span>Alert to the team lead</span></div>
+<ol>
+<li><b>Approve or Modify:</b> affected agents get a Proposed change. Accept → resolved. Decline → the team lead gets the next-best fix automatically.</li>
+<li><b>Reject:</b> a new fix is proposed that excludes the rejected actions.</li>
+<li><b>Escalate:</b> Ops gets a Critical notice due in 2 h and decides (overtime budget, outside cover, accept risk) or returns it.</li>
+<li>If a Critical alert waits 2 simulated hours undecided, Ops is told once ("Overdue at team lead").</li>
+</ol>
+<h3>B. Time-off request</h3>
+<div class="flow"><span>Agent asks</span><i>→</i><span>Coverage check</span><i>→</i><span>Covered: approved at once</span><i>|</i><span>Thin / Short: to team lead</span><i>→</i><span>Approve / Decline (reason)</span><i>→</i><span>Agent told (+ email copy if configured)</span></div>
+<p>For a Short day the agent is first offered alternatives (another day, a swap, a different shift). Pending requests can be withdrawn. Approved ones can be revoked with a reason until the day starts. Requests can never change a day that has started.</p>
+<h3>C. Shift swap</h3>
+<div class="flow"><span>Agent picks a trained colleague</span><i>→</i><span>Colleague agrees</span><i>→</i><span>Team lead approves</span><i>→</i><span>Roster updated, rules re-checked</span></div>
+<h3>D. Call spike</h3>
+<div class="flow"><span>Ops reports spike</span><i>→</i><span>Gap calculated</span><i>→</i><span>Alert to the owning team lead, or "absorbed"</span></div>
+<h3>E. Attendance reminder and check-in</h3>
+<div class="flow"><span>Team lead spots a shift needing attention</span><i>→</i><span>Send reminder (in-app; email copy if configured and verified)</span><i>→</i><span>Agent opens ShiftSense</span><i>→</i><span>Check in now</span><i>→</i><span>Server checks identity, own shift, window, not already recorded</span><i>→</i><span>Attendance recorded as "checked in" and audited</span><i>→</i><span>Team lead sees it</span></div>
+<ul>
+<li>The window opens 30 minutes before the start and closes 1 hour after it. Too early: "not open yet". Too late: "closed … ask your team lead to confirm".</li>
+<li>A reminder never records attendance; opening it records "opened" only. After "Send again", only the newest reminder per shift can be used.</li>
+<li>If the agent couldn't check in but is working, the team lead uses <b>Confirm presence</b> (reason required, never overwrites). If the agent thinks a record is wrong, they use <b>Report a record problem</b>, which changes nothing until the team lead acts.</li>
+<li>Reminder, opened, check-in and outcome stay separate in history.</li>
+</ul>
+<h3>F. Escalated gap closed with risk</h3>
+<div class="flow"><span>Ops decides without new cover</span><i>→</i><span>Alert "Closed by Ops · N people-h still uncovered"</span><i>→</i><span>Ops "Risk carried" list and performance "closed with risk carried"</span></div>
+<p>An Ops decision records what was decided but never changes the roster, so the gap is never reported as covered. The uncovered hours are also written into the alert's history.</p>
+<h3>G. Re-plan and publish</h3>
+<div class="flow"><span>New draft or what-if (live or demo)</span><i>→</i><span>Validate (rule checker)</span><i>→</i><span>Review changes, tick confirmation</span><i>→</i><span>Publish (stale check, violations re-checked)</span><i>→</i><span>Affected agents and team leads notified</span></div>
+<h3>H. Roll back to an earlier version</h3>
+<div class="flow"><span>Pick a superseded version + reason</span><i>→</i><span>Restore as draft</span><i>→</i><span>Validate</span><i>→</i><span>Review</span><i>→</i><span>Publish</span></div>
+<h3>I. Governance case</h3>
+<div class="flow"><span>Admin scans → Flagged</span><i>→</i><span>Acknowledge → Under Review</span><i>→</i><span>Request explanation (24 h)</span><i>→</i><span>Team lead explains</span><i>→</i><span>Resolve / Dismiss / Close, or refer to Ops</span><i>→</i><span>Ops authorises, declines or resolves</span></div>
+<h3>J. Import</h3>
+<p>Upload → match columns → row-by-row check → preview and confirm → build roster and rule check → replace the live workspace atomically and audit. Any rejected row stops the import; if no valid roster can be built, the old workspace stays live and the reason is shown.</p>
+<h3>K. Demo lifecycle</h3>
+<div class="flow"><span>Load demo story (sandbox)</span><i>→</i><span>Explore forecast</span><i>→</i><span>Simulate disruption (clock)</span><i>→</i><span>Evaluate recovery</span><i>→</i><span>What-if → Use as draft (live)</span><i>→</i><span>Validate → Review → Publish deliberately</span><i>→</i><span>Unload scenario</span></div>
+<p>Until that final Publish, the live roster is unchanged; tests prove this.</p>
+<h3>L. Account change and email verification</h3>
+<div class="flow"><span>Admin edits account</span><i>→</i><span>Validation (unique IDs and email, real agent, team)</span><i>→</i><span>Version check</span><i>→</i><span>Saved + audited</span><i>→</i><span>Takes effect on the person's next action</span></div>
+<div class="flow"><span>Person: sidebar → Email → Send code</span><i>→</i><span>6-digit code emailed (needs email configured)</span><i>→</i><span>Enter code → verified</span></div>
+
+<!-- ============================================================ COMMS -->
+<h2 id="comms">Messages, notifications, email</h2>
+<h3>Channels</h3>
+<div class="cols">
+<div class="note ok"><b>In-app (primary, always on).</b> Notifications and conversation threads inside ShiftSense. Read/unread, sender, time and context are shown, and Open jumps to the related record.</div>
+<div class="note"><b>Email (optional copy).</b> Sent only when email is configured on the server, the person chose "In-app and email", and their address is verified. Never from the demo scenario. Used for attendance reminders, request decisions and escalations to Ops.</div>
+<div class="note warn"><b>SMS: removed.</b> No SMS sending, links, phone numbers or provider settings remain. Old check-in links open the sign-in page and check nobody in.</div>
+</div>
+<h3>Email statuses (only what is known)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><span class="pill neu">Not configured</span></td><td>Email isn't set up on this server. Nothing was attempted.</td></tr>
+<tr><td><span class="pill neu">Not sent</span></td><td>Not attempted, with the reason (in-app preference, no address, address not verified, demo scenario).</td></tr>
+<tr><td><span class="pill info">Queued</span></td><td>Claimed for sending, so a crash leaves it visible instead of silently lost.</td></tr>
+<tr><td><span class="pill ok">Accepted by relay</span></td><td>The mail server accepted it. This is not proof of delivery; "delivered" is never claimed.</td></tr>
+<tr><td><span class="pill crit">Failed</span></td><td>Refused or unreachable, with the reason. Retried at most 3 times, never duplicated.</td></tr>
+</tbody></table></div>
+<h3>Conversation threads</h3>
+<div class="tbl"><table>
+<thead><tr><th>Thread attached to</th><th>Members</th></tr></thead>
+<tbody>
+<tr><td>An agent (direct)</td><td>That agent and their team lead</td></tr>
+<tr><td>A request</td><td>The requesting agent and their team lead</td></tr>
+<tr><td>An alert</td><td>The owning team lead and Ops</td></tr>
+<tr><td>A governance case</td><td>Admin, Ops and the team lead the case is about</td></tr>
+</tbody></table></div>
+<p>Anyone else gets "You are not part of this conversation". Each post notifies the other members only. Private agent–team lead messages never appear in anyone else's history, including Admin's.</p>
+<h3>Who gets which notification</h3>
+<div class="tbl"><table>
+<thead><tr><th>Event</th><th>Recipient</th><th>Priority</th><th>Action required · due</th></tr></thead>
+<tbody>
+<tr><td>Absence, no-show, early leave, spike</td><td>Owning team lead</td><td>Severity of the gap</td><td>Yes · within 2 h or before the gap</td></tr>
+<tr><td>Proposed change / open shift / swap ask</td><td>The specific agent(s)</td><td>—</td><td>Yes (inbox)</td></tr>
+<tr><td>Agent declines a change</td><td>Team lead (new fix ready)</td><td>Critical</td><td>Yes</td></tr>
+<tr><td>Escalation</td><td>Ops (+ email copy)</td><td>Critical</td><td>Yes · 2 h</td></tr>
+<tr><td>Overdue critical alert</td><td>Ops (once)</td><td>Critical</td><td>—</td></tr>
+<tr><td>Ops returns an issue / follow-up</td><td>Team lead</td><td>Warning</td><td>Yes · 2 h / 2–24 h</td></tr>
+<tr><td>Ops decision on an issue</td><td>Team lead</td><td>Info</td><td>No</td></tr>
+<tr><td>Pending time-off or swap</td><td>Team lead</td><td>Warning if Short, else Normal</td><td>Yes · before the day</td></tr>
+<tr><td>Request decided or revoked</td><td>The agent (+ email copy)</td><td>—</td><td>No</td></tr>
+<tr><td>Record problem reported</td><td>The agent's team lead</td><td>Normal</td><td>Yes</td></tr>
+<tr><td>Attendance reminder</td><td>The agent (+ email copy)</td><td>Normal</td><td>Yes · until check-in closes</td></tr>
+<tr><td>Explanation requested</td><td>Team lead concerned</td><td>Warning</td><td>Yes · 24 h</td></tr>
+<tr><td>Referral / corrective action</td><td>Ops</td><td>Warning</td><td>Yes · 4 h</td></tr>
+<tr><td>Explanation received, Ops outcome</td><td>Admin</td><td>Normal</td><td>No</td></tr>
+<tr><td>Plan published</td><td>Agents whose shifts changed, every team lead</td><td>Info</td><td>No</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ DECISIONS / AI -->
+<h2 id="decisions">Decision support and AI</h2>
+<p><b>Decision support is plain calculation, not AI.</b> The recovery engine works out the options, costs and remaining gaps. The screens then restate those exact figures instantly:</p>
+<ul>
+<li><b>Team Lead:</b> "Why this fix · trade-offs" on every alert.</li>
+<li><b>Ops:</b> "Decide first", whose action is always the engine's own recommendation (so the two can never disagree), with Open to jump to the alert.</li>
+<li><b>Admin:</b> "Week in brief", built from the weekly report's figures.</li>
+</ul>
+<p><b>The AI is used only where rules genuinely can't cope, and only after the rules have tried:</b></p>
+<ul>
+<li>Reading a free-text request the rules can't classify, or can't find the day in.</li>
+<li>Answering an open question that the rule answers don't cover (the "Ask" boxes).</li>
+</ul>
+<p>The AI never approves, changes a roster or sends anything. A person always clicks. Without an AI key, or if the AI is slow (20-second limit, one retry), unreachable or returns something unexpected, the rule-based answer is used. Every answer says whether it came from the AI or from the screen's data.</p>
+<p><b>Efficiency:</b> structured jobs (reading a typed request, matching unknown columns, reading pasted text) use a smaller, faster model; open questions use the larger one. Every call has a 20-second limit and one retry, and an identical request is answered from memory instead of calling the model again. There is no trained machine-learning model in ShiftSense: the forecast is a transparent seasonal average and plans come from a mathematical optimiser, so every number can be traced.</p>
+<p><b>Never decided by AI:</b> forecasting, Erlang C, staffing, roster optimisation, rule checks, recovery options and ranking, costs, approvals, escalations, permissions, governance thresholds and case states, audit, attendance and delivery status.</p>
+
+<!-- ============================================================ RULES -->
+<h2 id="rules">Rules and the recovery engine</h2>
+<div class="cols">
+<div><h4>Hard rules (never broken)</h4><ul>
+<li>Trained queues only</li><li>One shift per day</li><li>Rest ≥ 11 h between shifts</li><li>≤ 50 paid hours a week</li><li>≤ 6 shifts a week (≥ 1 weekly off)</li><li>Approved leave respected</li><li>Nights only for night-permitted agents, ≤ 4 a week</li><li>≤ 1 overtime day a fortnight</li><li>≤ 11 h daily span; extensions ≤ 2 h</li></ul></div>
+<div><h4>Recovery actions</h4><ul>
+<li>Cross-skill redeploy (donor queue protected)</li><li>Shift swap (partner trained for the same queue)</li><li>Open shift (first trained agent to accept)</li><li>Extension / overtime</li><li>If nothing closes the gap, the remaining risk is escalated, never silently accepted</li></ul>
+<h4>Ranking</h4><p>Extra cost + remaining service risk + blast radius. Started days are frozen; the smallest change wins.</p></div>
+</div>
+<p>After every plan, every recovery and every change, the independent rule checker re-verifies the roster. A change that would add a violation is rolled back at the moment it is saved. If the solver fails or runs out of time, nothing changes and the whole gap is escalated with an explanation.</p>
+
+<!-- ============================================================ TRUTH -->
+<h2 id="truth">Recorded, planned, forecast</h2>
+<p>Every number on screen is exactly one of these kinds, and the screens keep them apart.</p>
+<div class="tbl"><table>
+<thead><tr><th>Kind</th><th>What it is</th><th>Where you see it</th></tr></thead>
+<tbody>
+<tr><td>Recorded</td><td>Something that happened and was written down: a check-in, a team-lead confirmation, a reported absence, a no-show, an early departure, a decision.</td><td>Admin "Recorded so far", calendar cells Worked / No-show / Absent / Left early, decision log, audit trail, history.</td></tr>
+<tr><td>Planned</td><td>The roster as published or approved: shifts to come, approved leave and overtime.</td><td>"Scheduled" cells, next shift, team schedule, planner metrics.</td></tr>
+<tr><td>Forecast</td><td>Predicted demand and the people it needs. Coverage % compares the plan against this.</td><td>Admin's FORECAST box, "Coverage (planned)" tiles, planner charts.</td></tr>
+<tr><td>Simulated</td><td>Attendance and no-shows produced by the demo's simulation clock, and the demo's prior-period decisions.</td><td>Only in the demo scenario, always labelled.</td></tr>
+<tr><td>Not available</td><td>Figures that need data the PoC doesn't have: forecast accuracy, budget, SLA penalties in rupees, late-arrival minutes.</td><td>"Unavailable" or "Not configured", never estimated.</td></tr>
+</tbody></table></div>
+<p>A shift that has started with no check-in shows <b>No attendance record</b>. It is never assumed worked or absent.</p>
+
+<!-- ============================================================ STATES -->
+<h2 id="states">Status words</h2>
+<div class="tbl"><table>
+<thead><tr><th>Object</th><th>States</th></tr></thead>
+<tbody>
+<tr><td>Alert</td><td>Recommended · awaiting approval · Declined · new fix ready · Awaiting agent confirmation · Resolved · Escalated to Ops · Closed by Ops · Closed by Ops · N people-h still uncovered · No action needed</td></tr>
+<tr><td>Severity</td><td><span class="pill crit">Critical</span> <span class="pill warn">At risk</span> <span class="pill ok">Healthy</span></td></tr>
+<tr><td>Request coverage check</td><td><span class="pill ok">Covered</span> <span class="pill warn">Thin</span> <span class="pill crit">Short</span> (also called Green / Amber / Red)</td></tr>
+<tr><td>Request</td><td>Pending · Waiting for colleague · Approved · Rejected · Declined by colleague · Withdrawn · Revoked</td></tr>
+<tr><td>Plan</td><td>draft → validated → published → superseded</td></tr>
+<tr><td>Attendance (calendar)</td><td>Scheduled · No attendance record · Worked (checked in / confirmed by team lead / simulated) · Worked +OT · Extra shift · Swap · Left early · No-show · Absent · Leave · Off</td></tr>
+<tr><td>Reminder</td><td>Created · In inbox · Not delivered: no account · Opened / Not opened yet · Checked in. Old rows: "SMS (retired) · simulated, nothing sent"</td></tr>
+<tr><td>Email</td><td>Not configured · Not sent · Queued · Accepted by relay · Failed</td></tr>
+<tr><td>Governance case</td><td>Flagged · Under Review · Explanation Requested · Referred to Operations · Action Required · Resolved · Closed · Dismissed</td></tr>
+</tbody></table></div>
+<p>Reasons are mandatory for Modify, Reject, Escalate, Return, Revoke, declining a request, every Ops decision, confirming presence, reporting a record problem, role changes and deactivation, and every governance action except Acknowledge and Add note.</p>
+
+<!-- ============================================================ AUDIT -->
+<h2 id="audit">Audit, history, integrity</h2>
+<ul>
+<li>Every action through the permission layer writes an audit row, linked in a SHA-256 hash chain. Ops and Admin can verify the chain and download it. Nobody can edit it.</li>
+<li>Reversals add new records; nothing is overwritten. Audit, notifications, messages and cases survive a workspace reset.</li>
+<li>Changes are all-or-nothing under a lock. Double clicks and stale decisions return a conflict instead of applying twice.</li>
+<li><b>History</b> draws only on stored records: audit rows, schedule changes, alert histories, system events, reminders and email attempts, notifications, messages the person may read, and governance case events. Scope comes from the stored account, never from what the browser asks for: asking for another agent or team is refused. Exports never contain check-in links, verification codes or full email addresses.</li>
+<li><b>Health check</b> (<code>python -m shiftsense.health</code>): database integrity, the six roles, accounts, live roster with zero violations, demo state, audit chain, optimiser, email configured or not, AI key presence, disk space. <b>Backup</b> (<code>python -m shiftsense.backup create | verify | restore</code>). An error log records denied actions without secrets.</li>
+</ul>
+
+<!-- ============================================================ EVIDENCE -->
+<h2 id="evidence">Evidence (H1–H5)</h2>
+<p>The Analyst's benchmark compares ShiftSense with the manual process on the same simulated roster and disruptions. Each figure is labelled measured or modelled.</p>
+<div class="tbl"><table>
+<thead><tr><th>Hypothesis</th><th>What it tests</th></tr></thead>
+<tbody>
+<tr><td>H1 · Planning efficiency</td><td>Roster preparation effort falls by at least 70%.</td></tr>
+<tr><td>H2 · Service</td><td>Under-covered workload falls by at least 20% at equal or lower paid hours.</td></tr>
+<tr><td>H3 · Recovery speed</td><td>Median simulated time-to-cover is under 10 minutes (modelled timings: manual 15 min to detect and 6 min per phone call with 50% acceptance; ShiftSense 2 min for approval plus agent confirmation).</td></tr>
+<tr><td>H4 · Recovery economics</td><td>Equal coverage is restored at lower cost than overtime-first recovery.</td></tr>
+<tr><td>H5 · Operational safety</td><td>Zero hard-rule violations, verified by the independent checker.</td></tr>
+</tbody></table></div>
+<p>An ablation table shows the step-by-step gain: manual heuristic → optimiser → optimiser with fairness and stability → full loop with recovery.</p>
+
+<!-- ============================================================ GAPS FIXED -->
+<h2 id="gaps-fixed">Gaps found and fixed</h2>
+<p>Every row was a real problem found during reviews of the code and the running app. Severity: <span class="pill crit">Critical</span> could corrupt data or mislead decisions, <span class="pill warn">High</span> broke a job or rule, <span class="pill info">Medium</span> hurt trust or usability, <span class="pill neu">Low</span> polish.</p>
+<div class="tbl"><table>
+<thead><tr><th>Gap</th><th>Severity</th><th>Resolution</th><th>How it was checked</th></tr></thead>
+<tbody>
+<tr><td>Loading the demo story wrote straight into the live workspace</td><td><span class="pill crit">Critical</span></td><td>Demo became a separate sandbox (own storage slot and <code>sim-</code> run id). A previewed, all-or-nothing cleanup removed the old demo records from live.</td><td>Isolation tests; browser load → simulate → unload with live unchanged</td></tr>
+<tr><td>Started shifts with no check-in were counted as worked</td><td><span class="pill crit">Critical</span></td><td>Shown as "No attendance record"; attendance rate "Unavailable" until something is recorded, always with its sample.</td><td>Tests and browser</td></tr>
+<tr><td>A failed import could leave a half-replaced workspace</td><td><span class="pill crit">Critical</span></td><td>Atomic swap; nothing changes unless the new roster passes the rule checker.</td><td>Interrupted-swap test (it failed on the old code)</td></tr>
+<tr><td>A draft could overwrite approved changes made after it was created</td><td><span class="pill crit">Critical</span></td><td>Roster fingerprint on every draft; stale drafts refused at publish.</td><td>Stale-draft tests</td></tr>
+<tr><td>A forged session with a changed agent id was accepted</td><td><span class="pill crit">Critical</span></td><td>Identity (role, team, agent) is re-read from the stored account on every action.</td><td>Forged-identity tests</td></tr>
+<tr><td>Full check-in tokens were stored in reminder text</td><td><span class="pill crit">Critical</span></td><td>Masked in place; then SMS link check-in was removed entirely.</td><td>History and storage tests</td></tr>
+<tr><td>Admin could take operational decisions; extra roles existed</td><td><span class="pill warn">High</span></td><td>Exactly five roles; Admin is oversight only, refused on the server.</td><td>105-case permission matrix</td></tr>
+<tr><td>A request could still be approved after its day had started</td><td><span class="pill warn">High</span></td><td>Time guard on approvals and swap agreements.</td><td>Readiness test</td></tr>
+<tr><td>Recovery crashed when the solver returned no answer</td><td><span class="pill warn">High</span></td><td>Whole gap kept as residual, escalated and explained; roster untouched.</td><td>Solver-failure test</td></tr>
+<tr><td>Benchmark compared different rosters and mixed modelled with measured values</td><td><span class="pill warn">High</span></td><td>Same-roster comparison, provenance table, "MODELLED" labels, computed manual violations.</td><td>Benchmark test</td></tr>
+<tr><td>"Actual coverage %" was really roster against forecast</td><td><span class="pill warn">High</span></td><td>Relabelled "Live-roster coverage %" with explanations.</td><td>Tests updated</td></tr>
+<tr><td>Ops closing with "accept risk" made the gap look covered</td><td><span class="pill warn">High</span></td><td>Carried risk list; uncovered people-hours kept on the alert and in its history.</td><td>Scenario test C</td></tr>
+<tr><td>No way to record presence when an agent couldn't check in</td><td><span class="pill warn">High</span></td><td>Team lead "Confirm presence": reason required, never overwrites, audited, labelled.</td><td>History tests</td></tr>
+<tr><td>Agents couldn't flag a wrong record</td><td><span class="pill info">Medium</span></td><td>"Report a record problem" to the team lead; changes nothing by itself; no duplicates.</td><td>History tests</td></tr>
+<tr><td>No role had a usable history of past events</td><td><span class="pill warn">High</span></td><td>One shared history service, scoped per role on the server, with filters, pages, details and export.</td><td>12 history tests, 5 end-to-end scenarios, 6 UI tests</td></tr>
+<tr><td>Decision screens called the AI just to restate figures; slow and with no timeout</td><td><span class="pill warn">High</span></td><td>Decision support made deterministic and instant; AI only after rules fail; 20-second limit.</td><td>Tests prove the model is never called for decisions</td></tr>
+<tr><td>Ops' priority advice could contradict the engine's recommendation</td><td><span class="pill warn">High</span></td><td>"Decide first" uses the engine's own recommendation.</td><td>Assistant test</td></tr>
+<tr><td>SMS depended on an untested provider, fictional numbers and link check-in</td><td><span class="pill warn">High</span></td><td>SMS removed; in-app reminders with separate states; optional verified email with honest statuses, no duplicates, bounded retries. Live accounts migrated after a verified backup.</td><td>15 messaging tests; old link shown to check nobody in</td></tr>
+<tr><td>Hot code reload on a running server broke the shared workspace</td><td><span class="pill warn">High</span></td><td>Reload turned off; restart after code changes (runbook).</td><td>Manual</td></tr>
+<tr><td>No staffing variance view; team lead home had no attendance status</td><td><span class="pill info">Medium</span></td><td>Variance by half-hour (required, scheduled, recorded, unknown); attendance strip on the team lead screen.</td><td>Tests and browser</td></tr>
+<tr><td>No audited roster rollback</td><td><span class="pill info">Medium</span></td><td>Restore an earlier version as a draft through validate, review and publish.</td><td>Service test (screen not run in browser)</td></tr>
+<tr><td>No health check, backup or error log</td><td><span class="pill info">Medium</span></td><td>Health, verified backup and restore, rotating log without secrets.</td><td>Tests and manual</td></tr>
+<tr><td>Two sidebar collapse buttons; "On this page" links acted like fake pages</td><td><span class="pill info">Medium</span></td><td>Only Streamlit's own control remains (with accessible names); real section anchors with active highlighting.</td><td>Browser and navigation tests</td></tr>
+<tr><td>Late arrivals weren't tracked (only checked in or not)</td><td><span class="pill info">Medium</span></td><td>Minutes after the start are recorded per check-in, listed for the team lead, written to the audit trail and counted in the weekly report (to the half-hour).</td><td>Pilot-gap tests</td></tr>
+<tr><td>What-if runs kept only a one-line summary</td><td><span class="pill neu">Low</span></td><td>Inputs and the full metric comparison of every run are saved and listed in Planning → History.</td><td>Pilot-gap tests</td></tr>
+<tr><td>Backup restore had never been rehearsed</td><td><span class="pill info">Medium</span></td><td><code>python -m shiftsense.backup drill</code> restores the newest backup into a temporary copy and checks it (workspace loads, zero rule violations, audit chain intact), never touching live. Run on the real backup: passed in 0.2 s.</td><td>Drill test and a manual run</td></tr>
+<tr><td>Demo passwords were listed on the sign-in screen in every deployment</td><td><span class="pill warn">High</span></td><td><code>SHIFTSENSE_ENV=pilot</code> hides the list; the health check reports the mode and fails while any active account uses a published demo password.</td><td>UI test and health test</td></tr>
+<tr><td>Employee, contract, service-level and rule data could only change through a whole-workspace import or a configuration file</td><td><span class="pill warn">High</span></td><td>Versioned reference data with effective dates, the change engine (preview, approve, apply, ripple to roster and alerts), the Data hub, and the base input data pack.</td><td>20 data-system tests, screen tests</td></tr>
+<tr><td>One set of working-time rules for everybody</td><td><span class="pill warn">High</span></td><td>Contract types per employee, never looser than the company-wide rules, applied by the optimiser, baseline, recovery and the independent checker.</td><td>Contract tests</td></tr>
+<tr><td>No way to record holidays, outages, protests or disasters</td><td><span class="pill warn">High</span></td><td>Situation types with minimal mandatory fields, open ends, safety-first unavailability and continuity mode.</td><td>Situation tests</td></tr>
+<tr><td>Daily call totals were treated as zero</td><td><span class="pill info">Medium</span></td><td>Spread over the day using that queue's usual shape for the weekday, keeping the exact total (marked estimated split).</td><td>Data-system tests</td></tr>
+<tr><td>Cost views used one pay rate for everybody</td><td><span class="pill info">Medium</span></td><td>Each person's contract rate and overtime multiplier price labour, overtime and recovery options.</td><td>Data-system tests</td></tr>
+<tr><td>No forecast accuracy, actual service level or per-client report</td><td><span class="pill info">Medium</span></td><td>Measured from imported actual calls (with "answered within target" where supplied); per-client service-level report.</td><td>Data-system tests</td></tr>
+<tr><td>Everything except reference data still in a single SQLite file; no multi-server safety; no PostgreSQL backups</td><td><span class="pill warn">High</span></td><td>Whole app on the data layer; versioned saves; read-model tables; database-enforced append-only audit; PostgreSQL backup, restore, drill and migration tool; nightly job examples.</td><td>Full suite on SQLite and PostgreSQL; PostgreSQL backup and migration test</td></tr>
+<tr><td>Data input needed strict formats</td><td><span class="pill info">Medium</span></td><td>Smart conversion: rules first, optional AI, side-by-side check, rows-to-fix files, remembered column matches.</td><td>Conversion tests</td></tr>
+<tr><td>Outputs were screens plus a few CSVs</td><td><span class="pill info">Medium</span></td><td>Role downloads with Read me sheets, calendar files, templates, change log.</td><td>Export tests</td></tr>
+<tr><td>Screens didn't show how fresh they were; truncated labels; weak contrast</td><td><span class="pill neu">Low</span></td><td>"Updated hh:mm:ss" and Refresh; design-system pass; contrast tested.</td><td>Screenshots, contrast test</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ GAPS OPEN -->
+<h2 id="gaps-open">Gaps still open</h2>
+<p>Status: <b>Missing</b> (not built), <b>Blocked</b> (needs something outside the project), <b>Unverified</b> (built and tested automatically, not checked by hand), <b>Decision</b> (waiting for the team).</p>
+<div class="tbl"><table>
+<thead><tr><th>Gap</th><th>Severity for a pilot</th><th>Status</th><th>What would resolve it</th></tr></thead>
+<tbody>
+<tr><td>Sign-in uses demo accounts with published passwords; no SSO, no password policy, no forced first change, no lockout</td><td><span class="pill crit">Critical</span></td><td>Partly resolved</td><td>Pilot mode now hides the demo list and the health check fails while demo passwords are in use. Still needed: password reset and policy, lockout, then SSO (next round)</td></tr>
+<tr><td>Pilot hosting</td><td><span class="pill warn">High</span></td><td>Ready to try</td><td>Everything runs on PostgreSQL with multi-server-safe saves; still needed: a managed PostgreSQL service, the app servers themselves and the move of real data (<code>migrate_to_pg</code>)</td></tr>
+<tr><td>Live workspace not yet built from reference data</td><td><span class="pill info">Medium</span></td><td>Decided: keep the current small data for now</td><td>When wanted, the Analyst loads the small base pack and rebuilds (replaces the current live workspace; a backup is taken first)</td></tr>
+<tr><td>A new queue needs a rebuild to take effect</td><td><span class="pill neu">Low</span></td><td>By design for now</td><td>Live addition of queues without rebuilding</td></tr>
+<tr><td>Data is synthetic; no real HR, roster or call-volume feeds</td><td><span class="pill warn">High</span></td><td>Blocked</td><td>Integrations and data access from EXL</td></tr>
+<tr><td>Forecast accuracy can't be measured</td><td><span class="pill info">Medium</span></td><td>Blocked</td><td>Actual call volumes to compare with forecasts</td></tr>
+<tr><td>Cost rates, recovery timings and governance thresholds are assumptions</td><td><span class="pill info">Medium</span></td><td>Blocked</td><td>Validation with EXL finance and operations</td></tr>
+<tr><td>Email never tested with a real mail server; no delivery or bounce evidence</td><td><span class="pill info">Medium</span></td><td>Unverified</td><td>A relay account, a supervised test, a delivery webhook</td></tr>
+<tr><td>No screen-reader test; tablet and 200% zoom not checked; Streamlit's phone drawer doesn't keep keyboard focus inside it</td><td><span class="pill info">Medium</span></td><td>Missing</td><td>Accessibility audit with VoiceOver or NVDA</td></tr>
+<tr><td>Browser runs of the Agent, Ops, Analyst and Admin screens after the latest changes; swap, governance, publish and rollback by hand</td><td><span class="pill neu">Low</span></td><td>Unverified</td><td>A scripted manual walk-through (automated screen tests already pass)</td></tr>
+<tr><td>Old phone and SMS-consent columns are still in the live database, unused and hidden (3 fictional numbers)</td><td><span class="pill neu">Low</span></td><td>Decision</td><td>Team confirms, then a backed-up clear of those columns</td></tr>
+<tr><td>Only TL-1 and TL-2 have team-lead logins</td><td><span class="pill neu">Low</span></td><td>By design (demo)</td><td>Accounts for TL-3 to TL-5 (Admin can create them)</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ READINESS -->
+<h2 id="readiness">Readiness</h2>
+<div class="tbl"><table>
+<thead><tr><th>Level</th><th>Verdict</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Demonstration-ready</td><td><span class="pill ok">Yes</span></td><td>Core journeys run in the app on synthetic data; the demo is isolated from live; results are reproducible.</td></tr>
+<tr><td>PoC-verified</td><td><span class="pill ok">Yes, to the extent tested</span></td><td>459 automated tests pass: functions, the role permission matrix, isolation, integrity, boundaries, end-to-end workflows, history, messaging. Plus manual browser checks.</td></tr>
+<tr><td>Pilot-ready</td><td><span class="pill crit">No</span></td><td>Needs SSO, real data feeds, a managed database, validated assumptions, a real email relay test, a security review and an accessibility audit.</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ RUNNING -->
+<h2 id="running">Running it</h2>
+<p>From the project folder:</p>
+<div class="tbl" style="padding:10px 14px"><code class="mono" style="background:none">python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt</code><br><code class="mono" style="background:none">.venv/bin/python -m streamlit run app.py</code><br><code class="mono" style="background:none">.venv/bin/pytest -q</code></div>
+<div class="tbl"><table>
+<thead><tr><th>Setting</th><th>Where</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td>Deployment mode</td><td><code>SHIFTSENSE_ENV</code> = <code>demo</code> (default) or <code>pilot</code></td><td>Pilot hides demo accounts on sign-in; health check fails while demo passwords are in use</td></tr>
+<tr><td>Rules, queues, shifts, costs, seed, governance thresholds, overdue window</td><td><code>config/policy.yaml</code></td><td>Hard rules, service targets, simulated rates, the fixed seed, review thresholds, the 2-hour team-lead deadline</td></tr>
+<tr><td>Roles and permissions</td><td><code>config/users.yaml</code></td><td>What each role may do (read-only in the app)</td></tr>
+<tr><td>AI (optional)</td><td><code>ANTHROPIC_API_KEY</code></td><td>Turns on AI for free-text parsing and open questions; otherwise rules only</td></tr>
+<tr><td>Email (optional)</td><td><code>SHIFTSENSE_EMAIL=smtp</code>, <code>SMTP_HOST</code>, <code>SHIFTSENSE_EMAIL_FROM</code> (+ <code>SMTP_PORT</code>, <code>SMTP_USER</code>, <code>SMTP_PASSWORD</code>, <code>SMTP_TLS</code>)</td><td>Server environment only. Without them, messaging is in-app only</td></tr>
+<tr><td>Database and log</td><td><code>SHIFTSENSE_DB</code>, <code>SHIFTSENSE_LOG</code></td><td>Default <code>data/shiftsense.db</code> and <code>data/shiftsense.log</code></td></tr>
+</tbody></table></div>
+<p><b>Demo walkthrough:</b> analyst loads the demo story → aarav reports an absence or checks in → tl1 decides an alert and sends a reminder → ops handles escalations and follow-ups → analyst runs a what-if, uses it as a draft, validates, reviews, publishes, then unloads the scenario → admin reviews accounts, runs a governance scan and checks audit integrity.</p>
+<p>The app doesn't reload code while running. Restart it after any code change.</p>
+
+<footer>ShiftSense proof of concept · Group 24 (Saswata Saha, Supratik Sarkar) · all figures simulated · handbook dated 18 Oct 2026 · runbook: <code>docs/OPERATIONS.md</code> · findings: <code>docs/READINESS_REPORT.md</code></footer>
+</main>
+</div>

@@ -1,0 +1,52 @@
+# ShiftSense pilot stack: PostgreSQL 16, the app, nightly backup + restore drill, health monitor, HTTPS proxy.
+#   cp .env.example .env   # fill in; never commit it
+#   docker compose --env-file .env up -d --build
+# Data: the "pgdata" volume (database) and "appdata" volume (backups, drop folder, logs). Back up both off-host.
+name: shiftsense
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shiftsense
+      POSTGRES_DB: shiftsense
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in pilot.env}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shiftsense -d shiftsense"]
+      interval: 30s
+      retries: 5
+    # no published port: only the app containers reach the database
+
+  app:
+    build: {context: ., dockerfile: Dockerfile}
+    image: shiftsense:pilot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SHIFTSENSE_DATABASE_URL: postgresql://shiftsense:${POSTGRES_PASSWORD}@db:5432/shiftsense
+    depends_on: {db: {condition: service_healthy}}
+    volumes:
+      - appdata:/opt/shiftsense/data
+      - ./.streamlit/secrets.toml:/opt/shiftsense/.streamlit/secrets.toml:ro    # single sign-on settings (optional)
+    expose: ["8501"]
+
+  jobs:                      # nightly backup (keep 14) + restore drill at 01:30; health check every 15 min
+    image: shiftsense:pilot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SHIFTSENSE_DATABASE_URL: postgresql://shiftsense:${POSTGRES_PASSWORD}@db:5432/shiftsense
+    depends_on: {db: {condition: service_healthy}, app: {condition: service_started}}
+    volumes: [appdata:/opt/shiftsense/data]
+    command: ["python", "-m", "shiftsense.jobs"]
+
+  proxy:                     # HTTPS with an automatic certificate for SHIFTSENSE_DOMAIN
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment: {SHIFTSENSE_DOMAIN: "${SHIFTSENSE_DOMAIN:?set SHIFTSENSE_DOMAIN in pilot.env}"}
+    volumes: [./Caddyfile:/etc/caddy/Caddyfile:ro, caddydata:/data]
+    depends_on: [app]
+
+volumes: {pgdata: {}, appdata: {}, caddydata: {}}

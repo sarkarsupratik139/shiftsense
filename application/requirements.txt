@@ -1,0 +1,11 @@
+streamlit==1.64.0
+ortools==9.15.6755
+pandas==3.0.6
+numpy==2.5.3
+plotly==7.1.0
+pyyaml==6.0.3
+anthropic==1.12.1
+openpyxl==3.1.5
+pytest==9.1.1
+psycopg[binary]==3.2.9
+Authlib==1.9.1

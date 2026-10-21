@@ -1,0 +1,735 @@
+<title>ShiftSense HR Workflow Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a reference handbook — sticky contents rail on wide screens, one readable column, tables scroll in place.
+   Palette and type follow the ShiftSense app's own design tokens (ui_kit.TOKENS, IBM Plex). */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18202b; --muted:#566173; --rule:#dde2ea;
+  --accent:#1f5f8b; --accent-soft:#e6eff6; --code:#eef1f5;
+  --crit:#a3262a; --crit-bg:#fbeaea; --warn:#8a5a00; --warn-bg:#fdf3dc; --ok:#1d6b3c; --ok-bg:#e5f4ea;
+  --info:#1f5f8b; --info-bg:#e6eff6; --neu:#4a5363; --neu-bg:#eceff3;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-display:'IBM Plex Serif',Georgia,'Times New Roman',serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;
+  grid-template-columns:230px minmax(0,1fr);gap:40px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);
+  overflow:auto;font-size:13.5px;padding-right:6px}
+nav.toc b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:3px 8px;border-left:2px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{border-left-color:var(--accent);color:var(--accent);outline:none}
+main{min-width:0}
+header.cover{border-bottom:1px solid var(--rule);padding-bottom:22px;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,4.4vw,44px);line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.25;margin:56px 0 8px;padding-top:8px;
+  border-top:1px solid var(--rule);text-wrap:balance;scroll-margin-top:16px}
+h3{font-size:19px;font-weight:600;margin:30px 0 6px;scroll-margin-top:16px}
+h4{font-size:15px;font-weight:600;margin:20px 0 4px;color:var(--accent)}
+p,li{max-width:72ch}
+p{margin:8px 0}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+a{color:var(--accent)}
+.lede{font-size:18px;color:var(--muted);max-width:68ch}
+code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--code);padding:1px 5px;border-radius:4px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0 6px}
+.fact{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 12px}
+.fact b{display:block;font-size:22px;font-variant-numeric:tabular-nums;font-family:var(--f-display)}
+.fact span{font-size:13px;color:var(--muted)}
+.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.loop span{background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;padding:4px 10px;border-radius:999px}
+.loop i{color:var(--muted);font-style:normal}
+.note{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:6px;padding:10px 14px;margin:14px 0}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.tbl{overflow-x:auto;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;border-bottom:1px solid var(--rule)}
+th{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--neu-bg);font-weight:600}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;line-height:1.6}
+.crit{color:var(--crit);background:var(--crit-bg)} .warn{color:var(--warn);background:var(--warn-bg)}
+.ok{color:var(--ok);background:var(--ok-bg)} .info{color:var(--info);background:var(--info-bg)} .neu{color:var(--neu);background:var(--neu-bg)}
+dl.gloss{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:0;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+dl.gloss dt,dl.gloss dd{padding:8px 12px;border-bottom:1px solid var(--rule);margin:0}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{color:var(--ink)}
+.role{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:4px 18px 14px;margin:16px 0}
+.role .who{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13.5px;color:var(--muted);margin:6px 0 4px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:3px 9px}
+.flow i{color:var(--muted);font-style:normal}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:14px;color:var(--muted);font-size:13px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:8px}
+  nav.toc{position:static;max-height:none;border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:6px 10px 12px}
+  dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dt{border-bottom:none;padding-bottom:0}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style><style>pre.mermaid{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:12px;overflow-x:auto}</style>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Start here</b>
+  <a href="#scope">Scope and labels</a>
+  <a href="#separation">HR and Team Lead are separate</a>
+  <a href="#audit">1 · Capability audit</a>
+  <b>Processes</b>
+  <a href="#inventory">2 · Process inventory</a>
+  <a href="#p-lifecycle">A · Employee lifecycle</a>
+  <a href="#p-attendance">B · Attendance and absence</a>
+  <a href="#p-leave">C · Leave</a>
+  <a href="#p-shift">D · Shift changes and overtime</a>
+  <a href="#p-cases">E · HR cases</a>
+  <a href="#p-reports">F · HR reporting</a>
+  <b>Data</b>
+  <a href="#dataflow">4 · Data-flow architecture</a>
+  <a href="#erd">5 · Entity relationships</a>
+  <a href="#dictionary">6 · Data dictionary</a>
+  <a href="#states">7 · State transitions</a>
+  <b>Rules</b>
+  <a href="#approvals">8 · Approvals and validation</a>
+  <a href="#notify">9 · Notifications</a>
+  <a href="#access">10 · Ownership, access, audit</a>
+  <a href="#errors">11 · Errors and recovery</a>
+  <b>Delivery</b>
+  <a href="#integrations">System boundaries</a>
+  <a href="#sequence">12 · Implementation order</a>
+  <a href="#tests">13 · Tests and acceptance</a>
+  <a href="#open">Assumptions and open decisions</a>
+  <a href="#status">Implementation status</a>
+</nav>
+
+<main>
+<header class="cover">
+  <div class="eyebrow">ShiftSense · HR design · for review by Group 24 and EXL</div>
+  <h1>ShiftSense HR Workflow Design</h1>
+  <p class="lede">How HR information enters ShiftSense, gets checked, triggers decisions, updates records and reaches reports, across the employee lifecycle of a call-centre workforce. Written so a developer can build each workflow from it. Scope is HR only: operational planning, recovery and Ops decisions stay as they are.</p>
+  <p style="font-size:13.5px;color:var(--muted)">Draft 1 · 19 Oct 2026 · context: 50 simulated agents, 4 queues, 5 teams, 14-day plan · companion to the <a href="https://claude.ai/artifact/9kGT3mzNvQmoPkmR6FV5DB">Handbook</a> and <a href="https://claude.ai/artifact/MtqWbwXzhfc6xHuuur5UkB">Data Blueprint</a></p>
+</header>
+
+<h2 id="scope">Scope and labels</h2>
+<p>Every capability below carries one of four labels. Nothing marked <span class="pill info">New</span> or <span class="pill neu">External</span> exists today.</p>
+<div class="tbl"><table>
+<thead><tr><th>Label</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><span class="pill ok">Exists · verified</span></td><td>Built and covered by automated tests (470 on SQLite; the suite also runs on PostgreSQL).</td></tr>
+<tr><td><span class="pill warn">Exists · partial</span></td><td>Built, but not to the standard this design asks for. The gap is stated.</td></tr>
+<tr><td><span class="pill info">New</span></td><td>Proposed here, to be built.</td></tr>
+<tr><td><span class="pill neu">External</span></td><td>Needs a system ShiftSense does not have: HRIS, payroll, identity provider, badge system, document store.</td></tr>
+</tbody></table></div>
+<div class="note warn">ShiftSense holds <b>no</b> leave balances, salaries, payroll, recruitment, performance reviews or disciplinary records, and this design does not invent them. Where a workflow needs one of these, it either reads it from an external system or reports it as "Not tracked".</div>
+
+<!-- ============================================================ SEPARATION -->
+<h2 id="separation">HR and Team Lead are separate roles</h2>
+<p>HR and Team Lead have separate role identifiers, screens, data queries and server-side permissions. Neither inherits the other's rights, and neither inherits Ops' or the Analyst's.</p>
+<div class="tbl"><table>
+<thead><tr><th>Activity</th><th>HR</th><th>Team Lead</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Maintain employee master records</td><td>Responsible (all teams)</td><td>Proposes changes for own-team agents; HR decides</td><td><span class="pill ok">Exists · verified</span></td></tr>
+<tr><td>Contracts (hours, limits, pay rates)</td><td>Responsible; Ops approves because cost and coverage change</td><td>No access to change</td><td><span class="pill ok">Exists · verified</span></td></tr>
+<tr><td>Leave policies, types, balances</td><td>Responsible</td><td>Reads the request and its coverage check only</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Submit leave</td><td>No (only via an authorised on-behalf workflow, not proposed)</td><td>No</td><td>Agent only · <span class="pill ok">verified</span></td></tr>
+<tr><td>Decide a leave request</td><td>Policy review when a policy rule requires it</td><td>Operational approval (coverage) for own team</td><td>TL part <span class="pill ok">verified</span>; HR part <span class="pill info">New</span></td></tr>
+<tr><td>Report absence, late arrival, early leave</td><td>Receives the records</td><td>Responsible for own team</td><td><span class="pill ok">Exists · verified</span></td></tr>
+<tr><td>Confirm attendance when no check-in</td><td>Reviews discrepancies</td><td>Confirms presence for own team (reason, never overwrites)</td><td><span class="pill ok">Exists · verified</span></td></tr>
+<tr><td>Correct a finalised attendance record</td><td>Approves</td><td>Requests; no unrestricted edits</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Resolve staffing gaps</td><td>No authority</td><td>Approves, modifies, rejects or escalates fixes</td><td><span class="pill ok">Exists · verified</span></td></tr>
+<tr><td>Approve overtime</td><td>Only if a policy rule hands it to HR (not by default)</td><td>Within the recovery workflow (existing)</td><td><span class="pill ok">Exists</span> · HR rule <span class="pill info">New</span></td></tr>
+<tr><td>Confidential HR cases</td><td>Responsible; restricted to assigned HR staff</td><td>Refers concerns; sees only that the referral was received and closed</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Publish roster</td><td>No</td><td>No</td><td>Analyst only · <span class="pill ok">verified</span></td></tr>
+<tr><td>Organisation-wide HR reports</td><td>Responsible, with privacy rules</td><td>Own-team views only</td><td>Partial · <span class="pill warn">Exists · partial</span></td></tr>
+</tbody></table></div>
+<p><b>Proof today.</b> The permission test calls every protected server action directly, as each of the six roles: 184 combinations, all passing. That includes HR being refused all Team Lead actions (report absence, decide alerts and requests, send reminders, confirm attendance, post on an agent's private thread), and Team Leads being refused all HR actions (change another team's employee, change contracts, record HR leave, decide proposals). Forged sessions (HR claiming Team Lead, Team Lead claiming HR) are refused because identity is re-read from the stored account. Each role is also refused the other's screens.</p>
+<div class="cols">
+<div class="note"><b>HR flow.</b> Employee information or formal HR request → HR validation → policy and eligibility checks → authorised HR decision → HR record update → notification → audit and HR reporting.</div>
+<div class="note"><b>Team Lead flow.</b> Team attendance event or request → Team Lead review → team-level checks → operational decision or escalation → roster or attendance update where authorised → employee notified → operational history.</div>
+<div class="note"><b>Shared flow (absence).</b> Team Lead records the absence → staffing gap evaluated → existing recovery covers it → the absence record is visible to HR → HR does any employee follow-up. Information is shared; permissions are not.</div>
+</div>
+
+<!-- ============================================================ AUDIT -->
+<h2 id="audit">1 · Current HR capability audit</h2>
+<div class="tbl"><table>
+<thead><tr><th>Area</th><th>What exists (where)</th><th>Status</th><th>Gap</th></tr></thead>
+<tbody>
+<tr><td>Employee master</td><td>Versioned employee records with effective dates: ID, name, team, primary/secondary queues, contract, night permission, preferences, start date, last working day, status (Active / On notice / Long leave / Exited). <code>ref_records</code> domain <code>employees</code>; HR owns it.</td><td><span class="pill ok">Exists · verified</span></td><td>No job title, location or manager field (manager = team's lead, derived). No structured "event type" (joiner, transfer, role change, exit) on a change.</td></tr>
+<tr><td>Accounts and access</td><td>Accounts linked to an employee ID; Admin creates, changes and deactivates them; the next action after a change is refused (<code>accounts</code>).</td><td><span class="pill ok">Exists · verified</span></td><td>An exit date does not trigger account deactivation.</td></tr>
+<tr><td>Contracts</td><td>Contract types with hours, shift limits, nights, rest, overtime days, pay rate and overtime multiplier; applied by the optimiser, checker and recovery; Ops approves changes.</td><td><span class="pill ok">Exists · verified</span></td><td>None for HR purposes.</td></tr>
+<tr><td>Scheduled attendance</td><td>The live roster: who is expected, when, on which queue (workspace, plus <code>live_roster</code> rows).</td><td><span class="pill ok">Exists · verified</span></td><td>None.</td></tr>
+<tr><td>Recorded attendance</td><td>Self check-in (reminder, window, single use), team-lead confirmation with a reason, attendance-feed login with minute-level lateness; "no attendance record" is never treated as absent (<code>w.attendance</code>, <code>attendance_detail</code>, <code>reminders</code>).</td><td><span class="pill ok">Exists · verified</span></td><td>Records live inside the workspace snapshot, not an append-only HR table; no "finalised" state.</td></tr>
+<tr><td>Absence, no-show, early leave</td><td>Reported by the agent or team lead; creates an alert with a recovery fix; reason Unwell / Family emergency / Other (alerts, <code>leave</code> rows with a reason).</td><td><span class="pill ok">Exists · verified</span></td><td>No confirmed-no-show step separate from the operational alert; no HR categorisation.</td></tr>
+<tr><td>Attendance corrections</td><td>An agent reports a record problem (notifies team lead, changes nothing); the team lead confirms presence.</td><td><span class="pill warn">Exists · partial</span></td><td>No request record with status, no HR approval for changing a finalised record.</td></tr>
+<tr><td>Repeated absence review</td><td>None. (Governance scans review decisions, not absences.)</td><td><span class="pill info">New</span></td><td>Pattern rule and an HR review item.</td></tr>
+<tr><td>Leave requests</td><td>Agent submits; Green / Amber / Red coverage check; alternatives; Green auto-approved; team lead approves or declines (reason); withdraw; revoke before the day; one open request per day; HR leave file import (<code>w.requests</code>, <code>leave</code> domain).</td><td><span class="pill ok">Exists · verified</span></td><td>No leave types on agent requests, no policy check, no balance, no HR review step, no clarification step.</td></tr>
+<tr><td>Leave entitlement and balance</td><td>None.</td><td><span class="pill neu">External</span></td><td>From an HRIS, or opening balances entered by HR.</td></tr>
+<tr><td>Shift swaps and changes</td><td>Swap with a trained colleague (colleague agrees, team lead approves, rules re-checked); every roster change in an append-only change history.</td><td><span class="pill ok">Exists · verified</span></td><td>None for HR purposes.</td></tr>
+<tr><td>Overtime</td><td>Extensions and extra shifts from recovery, approved by the team lead, confirmed by the agent; contract limits enforced; costs at contract rates.</td><td><span class="pill warn">Exists · partial</span></td><td>No overtime ledger (who, hours, rate, approver) for HR and payroll; hours must be derived from roster rows.</td></tr>
+<tr><td>Working-hour compliance</td><td>Independent rule checker (rest, weekly hours, shifts, nights, overtime days) after every change.</td><td><span class="pill ok">Exists · verified</span></td><td>No HR compliance report.</td></tr>
+<tr><td>HR cases and grievances</td><td>None. (Governance cases are Admin's review of decisions, not employee matters.)</td><td><span class="pill info">New</span></td><td>Whole capability.</td></tr>
+<tr><td>Notifications and audit</td><td>In-app notifications, optional verified email, hash-chained append-only audit enforced by the database.</td><td><span class="pill ok">Exists · verified</span></td><td>None.</td></tr>
+<tr><td>HR reporting</td><td>HR overview (headcount by team and contract, joiners and leavers), weekly report, data-quality checks, change log.</td><td><span class="pill warn">Exists · partial</span></td><td>Absenteeism trends, overtime compliance, request ageing, case statistics.</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ INVENTORY -->
+<h2 id="inventory">2 · HR process inventory</h2>
+<div class="tbl"><table>
+<thead><tr><th>Process</th><th>Starts with</th><th>Owner of the decision</th><th>Ends with</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Onboarding</td><td>HR creates the employee record</td><td>HR (record), Admin (account)</td><td>Active employee with account, contract, team and skills; schedulable from the start date</td><td>Record <span class="pill ok">exists</span> · account link <span class="pill info">new</span></td></tr>
+<tr><td>Transfer or role change</td><td>HR, or a team lead's proposal</td><td>HR</td><td>New team, skills or contract from the effective date; affected shifts handled</td><td><span class="pill ok">Exists</span> · event type <span class="pill info">new</span></td></tr>
+<tr><td>Separation</td><td>HR sets the last working day</td><td>HR; access removal Admin or automatic</td><td>Status Exited, future shifts released, account deactivated, history kept</td><td>Partial · deactivation <span class="pill info">new</span></td></tr>
+<tr><td>Attendance capture</td><td>Shift start</td><td>Agent (check-in), Team Lead (confirm), feed</td><td>Recorded attendance or "no record"</td><td><span class="pill ok">Exists</span></td></tr>
+<tr><td>Absence and no-show</td><td>Report or missed shift</td><td>Team Lead</td><td>Confirmed absence or no-show; alert handled by recovery</td><td>Exists · confirmation step <span class="pill info">new</span></td></tr>
+<tr><td>Attendance correction</td><td>Agent or Team Lead request</td><td>Team Lead (open day), HR (finalised day)</td><td>Corrected record with before/after</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Absence pattern review</td><td>Pattern rule</td><td>HR</td><td>Review closed with an outcome</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Leave request</td><td>Agent</td><td>Team Lead (coverage), HR (policy, when required)</td><td>Approved, rejected, cancelled or reversed; roster and attendance updated</td><td>Exists · policy step <span class="pill info">new</span></td></tr>
+<tr><td>Shift swap</td><td>Agent</td><td>Colleague, then Team Lead</td><td>Roster updated, rules re-checked</td><td><span class="pill ok">Exists</span></td></tr>
+<tr><td>Overtime</td><td>Recovery fix or open shift</td><td>Team Lead, agent confirms</td><td>Roster updated; overtime ledger entry</td><td>Exists · ledger <span class="pill info">new</span></td></tr>
+<tr><td>HR case</td><td>Employee, Team Lead referral, or HR</td><td>Assigned HR caseworker</td><td>Resolved and closed, follow-up done</td><td><span class="pill info">New</span></td></tr>
+<tr><td>HR reporting</td><td>Schedule or on demand</td><td>HR</td><td>Reports with source, period and data-quality notes</td><td>Partial</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ A -->
+<h2 id="p-lifecycle">A · Employee lifecycle and master data</h2>
+<p><b>Trusted source.</b> The current version of the employee record is the single source for everything else. The roster reads team, skills, contract and availability. Leave and attendance read the employee ID and team. Reports read status and dates. Nothing copies these fields. Everything joins on <code>employee_id</code> and reads the version in force on the date concerned.</p>
+<pre class="mermaid">
+flowchart LR
+  A[HR: new employee<br/>form, file or HRIS] --> B{Checks: unique ID,<br/>team exists, queue known,<br/>contract known, dates}
+  B -- fail --> B1[Held back with<br/>what to fix]
+  B -- pass --> C[Employee record v1<br/>status Active from start date]
+  C --> D[Admin: account linked<br/>to employee ID]
+  C --> E[Roster: schedulable<br/>from start date]
+  C --> F[Analyst told:<br/>capacity change]
+  G[HR or TL proposal:<br/>transfer, skill, contract] --> H{HR decides<br/>contract change: Ops approves}
+  H -- approved --> I[New version from<br/>effective date]
+  I --> J[Shifts that no longer fit:<br/>alert today/tomorrow,<br/>re-plan later days]
+  K[HR: last working day] --> L[Version: On notice]
+  L --> M[After last day:<br/>status Exited]
+  M --> N[Future shifts released,<br/>pending requests closed]
+  M --> O[Account deactivated<br/>NEW]
+  M --> P[History kept<br/>never deleted]
+</pre>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>Rule</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Create</td><td>Mandatory: employee ID, name, team, primary queue, contract. ID unique for life (never reused after exit). Start date defaults to the effective date.</td><td><span class="pill ok">Exists</span></td></tr>
+<tr><td>Account association</td><td>One active account per employee ID. On create, Admin gets an "account needed" task; the account stores <code>agent_id</code> = employee ID.</td><td><span class="pill info">New</span> task; link <span class="pill ok">exists</span></td></tr>
+<tr><td>Event type</td><td>Every change set on employees records <code>event_type</code>: Joiner, Transfer, Skill change, Contract change, Status change, Correction, Separation, Rehire.</td><td><span class="pill info">New</span> field</td></tr>
+<tr><td>Verification</td><td>Records loaded from a file or HRIS are "unverified" until HR confirms them; reports show the share of verified records.</td><td><span class="pill info">New</span></td></tr>
+<tr><td>Separation</td><td>Last working day must be today or later (a past date needs an HR correction with a reason). The day after it, status becomes Exited automatically, the account is deactivated and the agent's future shifts are released through the change engine.</td><td>Release <span class="pill ok">exists</span> · status and deactivation <span class="pill info">new</span></td></tr>
+<tr><td>Retention</td><td>Versions and change sets are kept. Personal fields of exited employees can be masked after the retention period (policy value), keeping ID and dates for history.</td><td><span class="pill info">New</span> policy</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ B -->
+<h2 id="p-attendance">B · Attendance and absenteeism</h2>
+<p>Four facts are always kept apart, and none is inferred from another: <b>scheduled</b> (the roster says the person should work), <b>recorded</b> (check-in, team-lead confirmation or feed login), <b>reported absence</b> (someone said they are not coming) and <b>confirmed no-show</b> (the team lead confirms the person did not come and did not report). A shift that started with no record is "no attendance record": unknown, never absent.</p>
+<pre class="mermaid">
+flowchart TD
+  S[Roster: shift expected] --> T{Shift starts}
+  T --> R1[Check-in in window<br/>recorded, minutes late]
+  T --> R2[Feed login<br/>recorded, minutes late]
+  T --> R3[No record yet<br/>UNKNOWN]
+  R3 --> TL{Team Lead}
+  TL -- seen working --> C1[Confirm presence<br/>reason required]
+  TL -- not here, not reported --> N1[Confirm no-show<br/>NEW explicit step]
+  A0[Agent: can't come in] --> AB[Reported absence<br/>reason category]
+  AB --> GAP[Staffing gap<br/>existing recovery]
+  N1 --> GAP
+  C1 --> REC[Attendance record]
+  R1 --> REC
+  R2 --> REC
+  AB --> REC
+  N1 --> REC
+  REC --> CLOSE[Day finalised<br/>after 48 h NEW]
+  CLOSE --> HR[HR reporting and<br/>pattern review]
+  REC --> CORR[Correction request<br/>open day: TL · finalised: HR]
+</pre>
+<ul>
+<li><b>Late arrival:</b> minutes after start from check-in or feed (check-in is known to the half-hour, the feed to the minute). Lateness of 1 minute or more is recorded; a threshold for "counts as late" is an HR policy value (default 5 min).</li>
+<li><b>Early departure:</b> the team lead's "send someone home" or the agent's "leave now" (existing), or a feed logout earlier than the shift end minus the tolerance (new, recorded only; no automatic alert).</li>
+<li><b>Absence category:</b> reported reasons map to HR categories: Unwell → Sickness, Family emergency → Emergency, Other → Unspecified; approved leave keeps its leave type. HR may re-categorise with a reason (new).</li>
+<li><b>Finalisation (new):</b> 48 hours after the shift end the day's attendance is finalised. Before that, the team lead can still confirm. After that, only an HR-approved correction changes it.</li>
+<li><b>Pattern review (new):</b> a rule (default: 3 or more unplanned absences or no-shows in 30 days, or 2 Monday/Friday absences in 4 weeks) creates an HR review item. It is a signal for a conversation, never a finding or a sanction, and it is visible only to HR.</li>
+<li><b>Synchronisation:</b> an absence creates the operational alert (existing). The alert closing never changes the attendance fact, and the attendance fact never closes the alert.</li>
+</ul>
+
+<!-- ============================================================ C -->
+<h2 id="p-leave">C · Leave management</h2>
+<pre class="mermaid">
+sequenceDiagram
+  participant Ag as Agent
+  participant SS as ShiftSense
+  participant TL as Team Lead
+  participant HR as HR
+  Ag->>SS: Request leave (type, dates, note)
+  SS->>SS: Validate employee, dates, overlap, open requests
+  SS->>SS: Policy check (type rules, notice, balance if tracked)
+  SS->>SS: Coverage check Green / Amber / Red (existing)
+  alt Green and no policy flag
+    SS-->>Ag: Approved automatically (existing)
+  else needs Team Lead
+    SS->>TL: Operational review (coverage)
+    TL->>SS: Approve / Reject (reason) / Ask for clarification
+  end
+  opt Policy flag (balance short or unknown, long leave, sick note due)
+    SS->>HR: Policy review
+    HR->>SS: Approve / Reject (reason) / Ask for clarification
+  end
+  SS->>SS: One transaction: request Approved + leave days + roster released + attendance expectation removed
+  SS-->>Ag: Decision (in-app, email copy if set up)
+  SS->>SS: Audit and HR reporting
+</pre>
+<div class="tbl"><table>
+<thead><tr><th>Situation</th><th>Handling</th></tr></thead>
+<tbody>
+<tr><td>Overlapping request</td><td>Refused at submit if any day overlaps an open or approved request for the same person (existing per day; new for ranges).</td></tr>
+<tr><td>Balance not tracked</td><td>For leave types marked "needs balance", the request goes to HR review with "Balance not tracked" shown. Nothing is assumed approved.</td></tr>
+<tr><td>Insufficient balance</td><td>HR review: approve as unpaid (with the agent's agreement), approve partially, or reject with a reason. Operational feasibility never overrides policy.</td></tr>
+<tr><td>Pending request at the day's start</td><td>Cannot be approved after the day starts (existing guard); it expires and the agent is told.</td></tr>
+<tr><td>Staffing shortage (Red)</td><td>Alternatives offered first (existing). The team lead decides. HR policy approval alone never approves a Red day.</td></tr>
+<tr><td>Cancellation by the agent</td><td>Before approval: Withdrawn (existing). After approval and before the day: Cancelled; the roster shift is offered back to the agent, and balance is restored if tracked (new).</td></tr>
+<tr><td>Reversal</td><td>Team lead revokes before the day (existing). After leave was taken (for example, the person actually worked): HR correction, which adds a reversing event and never edits the original.</td></tr>
+<tr><td>Clarification</td><td>Approver asks a question; the request waits in "Needs clarification"; the agent answers in the request thread; the clock for a decision pauses (new).</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ D -->
+<h2 id="p-shift">D · Shift changes and overtime</h2>
+<p>Two records are kept apart. The <b>operational decision</b> (how a gap is covered) belongs to the Team Lead and Ops and lives in alerts and the roster. The <b>HR record</b> (who worked how many hours, overtime, compliance) is derived from the confirmed roster and kept in an overtime ledger.</p>
+<pre class="mermaid">
+flowchart LR
+  F[Recovery fix approved<br/>by Team Lead] --> G[Agent confirms<br/>extension or extra shift]
+  G --> H[Roster updated<br/>rules re-checked]
+  H --> I[Overtime ledger entry<br/>NEW: hours, rate, approver, alert]
+  SW[Swap agreed + TL approved] --> H
+  TO[Time off approved] --> H
+  H --> J[Attendance expectation<br/>updated]
+  H --> K[Staffing calculation<br/>updated]
+  I --> L[HR compliance report:<br/>weekly hours, rest, OT days]
+  I --> M[Payroll export<br/>EXTERNAL]
+</pre>
+<ul>
+<li>The overtime ledger entry is written in the same transaction as the agent's confirmation. A declined offer writes nothing.</li>
+<li>Compliance (rest at least 11 hours, weekly hours, shifts, nights, overtime days, per contract) is enforced before the change (existing). The HR report shows actual values against limits, plus any approved temporary rule exceptions.</li>
+<li>Policy option (new, off by default): overtime above N hours a month for one person needs HR sign-off after the operational approval. This is the only case where HR approves overtime.</li>
+<li>Notifications: the agent gets before and after (existing); the team lead gets confirmation; HR gets a monthly overtime summary, not each event.</li>
+</ul>
+
+<!-- ============================================================ E -->
+<h2 id="p-cases">E · Employee concerns and HR cases</h2>
+<p>HR cases are a new, separate store. They never appear in team threads, operational alerts, governance cases, history views of other roles, or operational exports.</p>
+<pre class="mermaid">
+flowchart TD
+  E1[Employee raises concern] --> NEW[Case: Submitted]
+  E2[Team Lead refers] --> NEW
+  E3[HR opens] --> NEW
+  NEW --> TRI[HR triage: category,<br/>confidentiality, owner]
+  TRI --> INV[Under investigation]
+  INV --> INFO[Information requested<br/>from a named person]
+  INFO --> INV
+  INV --> RES[Resolved: outcome recorded]
+  RES --> FU[Follow-up due]
+  FU --> CL[Closed]
+  INV --> ESC[Escalated: senior HR]
+  ESC --> INV
+  TRI --> CLQ[Policy query answered<br/>closed directly]
+</pre>
+<div class="tbl"><table>
+<thead><tr><th>Confidentiality</th><th>Who sees details</th><th>What a Team Lead or Ops may see</th></tr></thead>
+<tbody>
+<tr><td>Standard (policy query, general concern)</td><td>HR, the employee</td><td>Nothing, unless HR shares an action they must take</td></tr>
+<tr><td>Restricted (grievance about a person, health)</td><td>The assigned caseworker and senior HR, the employee</td><td>Only an action, without the reason: "Schedule A12 on Morning shifts only until 30 Nov". The referring team lead sees "received" and "closed".</td></tr>
+<tr><td>Highly restricted (harassment, whistleblowing)</td><td>The named investigator and senior HR only</td><td>Nothing. Even the existence of the case is hidden from people it names.</td></tr>
+</tbody></table></div>
+<p>Why: managers need to act on outcomes (a schedule restriction), not to know reasons. Ops needs to know only when an outcome affects coverage, and then only the effect. Every view of a restricted case is itself logged.</p>
+
+<!-- ============================================================ F -->
+<h2 id="p-reports">F · HR reporting and workforce insights</h2>
+<div class="tbl"><table>
+<thead><tr><th>Metric</th><th>Source</th><th>Calculation</th><th>Period</th><th>Data-quality rule</th></tr></thead>
+<tbody>
+<tr><td>Active headcount</td><td>Employee versions</td><td>Employees with status Active or On notice on the day</td><td>Daily, month-end</td><td>Exclude unverified records from "verified headcount"; show both</td></tr>
+<tr><td>Joiners, leavers, turnover %</td><td>Employee events</td><td>Leavers in period ÷ average headcount</td><td>Monthly</td><td>Corrections do not count as leavers or joiners</td></tr>
+<tr><td>Attendance rate</td><td>Attendance records</td><td>Recorded present ÷ (recorded present + confirmed absences and no-shows) for started shifts</td><td>Weekly, monthly</td><td>"No record" excluded and shown as its own count; never counted as absent</td></tr>
+<tr><td>Unplanned absence rate</td><td>Absences and no-shows</td><td>Unplanned absent shifts ÷ scheduled shifts</td><td>Weekly, monthly</td><td>Only finalised days</td></tr>
+<tr><td>Lateness</td><td>Check-ins and feed</td><td>Late arrivals ÷ recorded arrivals; median minutes late</td><td>Weekly</td><td>State precision (half-hour for check-in, minute for feed)</td></tr>
+<tr><td>Leave utilisation</td><td>Leave requests and balances</td><td>Days taken ÷ entitlement</td><td>Monthly, yearly</td><td>"Not tracked" when no balance source exists</td></tr>
+<tr><td>Pending and overdue requests</td><td>Requests, corrections, cases</td><td>Open items by age; overdue against the policy deadline</td><td>Live</td><td>Paused time (clarification) excluded</td></tr>
+<tr><td>Overtime and compliance</td><td>Overtime ledger, roster</td><td>Hours per person against contract limits; breaches (should be 0)</td><td>Weekly, monthly</td><td>Only confirmed overtime</td></tr>
+<tr><td>Shift distribution</td><td>Roster</td><td>Nights and weekends per person; spread</td><td>Per plan</td><td>Planned, labelled as planned</td></tr>
+<tr><td>Record completeness</td><td>Employee records</td><td>Share of records with all mandatory and recommended fields, verified</td><td>Live</td><td>Shown per field</td></tr>
+<tr><td>HR case volumes and resolution time</td><td>HR cases</td><td>Opened, closed, median days to close, by category</td><td>Monthly</td><td>Groups smaller than 5 suppressed; no names</td></tr>
+</tbody></table></div>
+<p>Every report states whether its figures are recorded, planned or forecast, and whether it covers the live workspace or the demo scenario. Corrections show in the period they were made, with the original period noted.</p>
+
+<!-- ============================================================ DATA FLOW -->
+<h2 id="dataflow">4 · End-to-end data flow</h2>
+<p>Every HR workflow follows the same pipeline. Each stage runs on the server.</p>
+<div class="flow"><span>Data source</span><i>→</i><span>Input validation</span><i>→</i><span>HR business rules</span><i>→</i><span>Approval or decision</span><i>→</i><span>One database transaction</span><i>→</i><span>Downstream updates</span><i>→</i><span>Notifications</span><i>→</i><span>Reports and audit</span></div>
+<pre class="mermaid">
+flowchart LR
+  subgraph Sources
+    HRf[HR forms and files]
+    TLf[Team Lead actions]
+    AGf[Agent actions]
+    FEED[Attendance feed]
+    HRIS[HRIS file EXTERNAL]
+  end
+  subgraph Rules
+    V[Validation<br/>mandatory, formats, duplicates]
+    P[HR policy<br/>leave types, thresholds]
+    O[Operational checks<br/>coverage, hard rules]
+  end
+  subgraph Records
+    EMP[(Employee versions)]
+    LR[(Leave requests)]
+    ATT[(Attendance events)]
+    OT[(Overtime ledger)]
+    CASE[(HR cases)]
+    RO[(Roster)]
+  end
+  HRf --> V --> P --> EMP & LR & CASE
+  AGf --> V --> P & O
+  TLf --> O --> RO & ATT
+  FEED --> V --> ATT
+  HRIS --> V --> EMP & LR
+  LR --> RO
+  EMP --> RO
+  RO --> OT
+  EMP & LR & ATT & OT & CASE --> REP[HR reports]
+  EMP & LR & ATT & OT & CASE & RO --> AUD[(Audit chain)]
+</pre>
+<div class="tbl"><table>
+<thead><tr><th>Workflow</th><th>Creates the original</th><th>Authoritative entity</th><th>Fields written</th><th>Must pass before commit</th><th>Downstream</th><th>Notified</th></tr></thead>
+<tbody>
+<tr><td>Onboarding</td><td>HR (form, file, HRIS)</td><td>Employee version</td><td>All employee fields, event_type=Joiner, verified</td><td>Mandatory fields, unique ID, known team, queue, contract</td><td>Roster availability from start date; Admin account task</td><td>Admin, Analyst, team lead</td></tr>
+<tr><td>Transfer</td><td>HR or TL proposal</td><td>Employee version</td><td>team / skills / contract, event_type</td><td>HR decision; Ops for contract; hard rules on future shifts</td><td>Alerts or re-plan; ownership of requests moves</td><td>Both team leads, agent, Analyst</td></tr>
+<tr><td>Separation</td><td>HR</td><td>Employee version</td><td>end_date, status</td><td>Date not in the past without correction reason</td><td>Shifts released, requests closed, account deactivated</td><td>Team lead, Admin, Analyst</td></tr>
+<tr><td>Attendance</td><td>Agent, TL, feed</td><td>Attendance event</td><td>type, time, minutes late, source, actor</td><td>Rostered, started, not already recorded</td><td>Variance view, reports</td><td>Team lead (lateness list)</td></tr>
+<tr><td>Correction</td><td>Agent or TL</td><td>Correction request → attendance event</td><td>requested change, reason, decision</td><td>Open day: TL; finalised: HR; reason</td><td>Reports recalculated</td><td>Requester, team lead</td></tr>
+<tr><td>Leave</td><td>Agent</td><td>Leave request</td><td>type, dates, status, decisions</td><td>Overlap, policy, coverage, approvals</td><td>Leave days, roster, attendance expectation, balance</td><td>Agent, TL, HR when reviewing</td></tr>
+<tr><td>Overtime</td><td>Recovery (TL approves, agent confirms)</td><td>Overtime ledger</td><td>agent, date, hours, rate, approver, alert</td><td>Contract limits</td><td>Compliance report, payroll export</td><td>Agent, HR monthly</td></tr>
+<tr><td>HR case</td><td>Employee, TL, HR</td><td>HR case</td><td>category, confidentiality, owner, status, events</td><td>Access rules; reasons on transitions</td><td>Restricted actions only</td><td>Employee, owner, referrer (status only)</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ ERD -->
+<h2 id="erd">5 · Entity relationships</h2>
+<p>Existing entities are reused. New ones are kept to what the workflows need. Leave days on the roster are not stored twice: the roster reads approved leave.</p>
+<pre class="mermaid">
+erDiagram
+  EMPLOYEE ||--o{ EMPLOYEE_VERSION : "versions (ref_records)"
+  EMPLOYEE ||--o| ACCOUNT : "agent_id"
+  EMPLOYEE }o--|| CONTRACT : "contract"
+  EMPLOYEE ||--o{ ROSTER_SHIFT : "works"
+  EMPLOYEE ||--o{ ATTENDANCE_EVENT : "has"
+  ROSTER_SHIFT ||--o{ ATTENDANCE_EVENT : "for shift"
+  ATTENDANCE_EVENT ||--o{ ATTENDANCE_CORRECTION : "corrected by"
+  EMPLOYEE ||--o{ LEAVE_REQUEST : "asks"
+  LEAVE_TYPE ||--o{ LEAVE_REQUEST : "of type"
+  EMPLOYEE ||--o{ LEAVE_BALANCE : "holds"
+  LEAVE_TYPE ||--o{ LEAVE_BALANCE : "per type"
+  LEAVE_REQUEST ||--o{ HR_APPROVAL : "decided by"
+  ATTENDANCE_CORRECTION ||--o{ HR_APPROVAL : "decided by"
+  ROSTER_SHIFT ||--o{ OVERTIME_RECORD : "extra hours"
+  ALERT ||--o{ OVERTIME_RECORD : "caused by"
+  EMPLOYEE ||--o{ HR_CASE : "subject or raiser"
+  HR_CASE ||--o{ HR_CASE_EVENT : "timeline"
+  HR_CASE ||--o{ HR_CASE_EVIDENCE : "files"
+  HR_POLICY ||--o{ LEAVE_TYPE : "rules"
+  NOTICE }o--o| LEAVE_REQUEST : "related"
+  AUDIT_LOG }o--o| EMPLOYEE : "record"
+</pre>
+<p>Reused as they are: EMPLOYEE_VERSION (<code>ref_records</code>), ACCOUNT, CONTRACT, ROSTER_SHIFT (workspace plus <code>live_roster</code>), ALERT, NOTICE, AUDIT_LOG, change sets. Reused with additions: LEAVE_REQUEST (today the workspace's request list; becomes a table with type and HR stage). New: ATTENDANCE_EVENT, ATTENDANCE_CORRECTION, LEAVE_TYPE, LEAVE_BALANCE, HR_APPROVAL, OVERTIME_RECORD, HR_CASE, HR_CASE_EVENT, HR_CASE_EVIDENCE, HR_POLICY.</p>
+<p><b>Record kinds.</b> A <b>current-state record</b> is the latest version (employee, balance). A <b>historical event</b> is append-only and never edited (attendance event, overtime record, case event, audit row). A <b>pending request</b> is a record whose status can still move (leave request, correction). An <b>approved decision</b> is an HR_APPROVAL row plus the events it caused; it is reversed only by a new reversing event.</p>
+
+<!-- ============================================================ DICTIONARY -->
+<h2 id="dictionary">6 · Field-level data dictionary (new and modified)</h2>
+<h3>EMPLOYEE_VERSION (modified: <code>ref_records</code>, domain employees)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>event_type (on the change set)</td><td>text enum</td><td>Yes (new)</td><td>Joiner · Transfer · Skill change · Contract change · Status change · Correction · Separation · Rehire</td></tr>
+<tr><td>job_title</td><td>text</td><td>No (new)</td><td>Free text, 80 chars</td></tr>
+<tr><td>location</td><td>text</td><td>No (new)</td><td>From a configured list</td></tr>
+<tr><td>verified_by, verified_at</td><td>text, timestamp</td><td>No (new)</td><td>Set by HR confirmation; cleared when a later version changes identity fields</td></tr>
+<tr><td>(existing) employee_id, name, team, primary, secondary, contract, night_ok, start_date, end_date, status</td><td>as today</td><td>as today</td><td>Unchanged</td></tr>
+</tbody></table></div>
+<h3>ATTENDANCE_EVENT (new; replaces the attendance values inside the workspace)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>bigint PK</td><td>Yes</td><td>Sequence</td></tr>
+<tr><td>run_id, employee_id, shift_date</td><td>text, text, date</td><td>Yes</td><td>Must match a roster shift (except reported absence for a future day)</td></tr>
+<tr><td>event_type</td><td>enum</td><td>Yes</td><td>check_in · tl_confirmation · feed_login · feed_logout · absence_reported · no_show_confirmed · left_early · correction · reversal</td></tr>
+<tr><td>event_time</td><td>timestamp</td><td>Yes</td><td>Simulated or real time</td></tr>
+<tr><td>minutes_late</td><td>int</td><td>No</td><td>≥ 0; precision stated by source</td></tr>
+<tr><td>category</td><td>enum</td><td>For absences</td><td>Sickness · Emergency · Unspecified · Approved leave (type)</td></tr>
+<tr><td>source, actor, reason</td><td>text</td><td>source, actor yes</td><td>Reason mandatory for TL confirmation, correction, reversal</td></tr>
+<tr><td>supersedes_id</td><td>bigint FK</td><td>For correction/reversal</td><td>Points at the event it corrects; never edits it</td></tr>
+<tr><td>finalised</td><td>bool</td><td>Yes</td><td>True 48 h after shift end</td></tr>
+</tbody></table></div>
+<p>Unique: one non-superseded presence event per employee and shift. The current state per shift is derived as the latest event not superseded.</p>
+<h3>ATTENDANCE_CORRECTION (new)</h3>
+<p>id · employee_id · shift_date · requested_by · requested_role · requested_change (enum: mark present, mark absent, change category, change times) · requested_values (json) · reason (required) · status · decided_by · decision_reason · created/decided timestamps · resulting_event_id.</p>
+<h3>LEAVE_TYPE and HR_POLICY (new)</h3>
+<p>LEAVE_TYPE: code (PK: ANNUAL, SICK, UNPAID, TRAINING, OTHER) · label · paid (bool) · needs_balance (bool) · min_notice_days · max_consecutive_days · needs_hr_review_over_days · evidence_after_days (sick note) · active. HR_POLICY: key (PK) · value · effective_from · approved_by. Holds lateness threshold, finalisation hours, pattern thresholds, case deadlines and retention periods. It reuses the existing versioned rules store under an <code>hr.</code> prefix instead of a new table.</p>
+<h3>LEAVE_BALANCE (new; only with a source)</h3>
+<p>employee_id + leave_type + period (PK) · entitled_days · taken_days · pending_days · source (HRIS or HR entry) · as_of · updated_by. Without a source no row exists, and the screen shows "Not tracked".</p>
+<h3>LEAVE_REQUEST (modified: from the workspace list into a table)</h3>
+<p>Existing fields (id, agent_id, day or range, coverage status, state, alternative, note, reason) plus: leave_type · date_from · date_to · hr_review_required (bool) · hr_review_reason · clarification_question · version (for conflict checks).</p>
+<h3>HR_APPROVAL (new)</h3>
+<p>id · subject_type (leave_request, correction, overtime) · subject_id · stage (operational, policy) · decided_by · role · decision (approve, reject, clarify) · reason · decided_at. Unique (subject_type, subject_id, stage, decision_round), which prevents repeated approvals.</p>
+<h3>OVERTIME_RECORD (new)</h3>
+<p>id · employee_id · shift_date · kind (extension, extra shift) · hours · rate · multiplier · approved_by (TL) · confirmed_at (agent) · alert_id · reversal_of. Written in the same transaction as the agent's confirmation.</p>
+<h3>HR_CASE, HR_CASE_EVENT, HR_CASE_EVIDENCE (new)</h3>
+<p>HR_CASE: id · category (grievance, concern, policy query, conduct referral, health and wellbeing) · confidentiality (standard, restricted, highly restricted) · raised_by · subject_employee_id (nullable) · owner (HR user) · status · due_at · outcome · created/closed. HR_CASE_EVENT: id · case_id · actor · action · from_status · to_status · note · visible_to (json list of usernames or roles) · created. HR_CASE_EVIDENCE: id · case_id · filename · content_hash · stored_ref (document store) · uploaded_by · created. Files live outside the database; only references and hashes are stored.</p>
+
+<!-- ============================================================ STATES -->
+<h2 id="states">7 · Workflow state transitions</h2>
+<h3>Leave request</h3>
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> Submitted
+  Submitted --> AutoApproved: Green and no policy flag
+  Submitted --> UnderReview: needs TL or HR
+  UnderReview --> NeedsClarification: approver asks
+  NeedsClarification --> UnderReview: agent answers
+  UnderReview --> Approved: all required stages approve
+  UnderReview --> Rejected: any stage rejects (reason)
+  Submitted --> Withdrawn: agent, before decision
+  UnderReview --> Withdrawn: agent, before decision
+  Approved --> Cancelled: agent, before the day
+  Approved --> Revoked: TL, before the day (reason)
+  Approved --> Reversed: HR correction after the day
+  AutoApproved --> Cancelled: agent, before the day
+  UnderReview --> Expired: day started without decision
+</pre>
+<div class="tbl"><table>
+<thead><tr><th>Transition</th><th>Who</th><th>Condition</th><th>Side effects</th></tr></thead>
+<tbody>
+<tr><td>Submitted → UnderReview</td><td>System</td><td>Not Green, or a policy flag</td><td>Tasks to TL and, if flagged, HR</td></tr>
+<tr><td>UnderReview → Approved</td><td>Last required approver</td><td>All required stages approved; day not started; rules pass</td><td>One transaction: leave days, roster release, attendance expectation, balance (if tracked), notices</td></tr>
+<tr><td>UnderReview → Rejected</td><td>TL or HR</td><td>Reason given</td><td>Agent told; nothing else changes</td></tr>
+<tr><td>Approved → Cancelled</td><td>Agent</td><td>Before the day</td><td>Shift offered back; balance restored</td></tr>
+<tr><td>Approved → Revoked</td><td>TL</td><td>Before the day; reason; rules pass</td><td>Shift restored; agent told (existing)</td></tr>
+<tr><td>Approved → Reversed</td><td>HR</td><td>After the day; reason</td><td>Reversing events; reports recalculated</td></tr>
+</tbody></table></div>
+<h3>Attendance correction</h3>
+<div class="tbl"><table>
+<thead><tr><th>From</th><th>To</th><th>Who</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>—</td><td>Requested</td><td>Agent (own), TL (own team)</td><td>Reason given; shift exists</td></tr>
+<tr><td>Requested</td><td>Approved</td><td>TL if the day is open; HR if finalised</td><td>Not the requester; reason for HR</td></tr>
+<tr><td>Requested</td><td>Rejected</td><td>Same as approval</td><td>Reason</td></tr>
+<tr><td>Requested</td><td>Withdrawn</td><td>Requester</td><td>Before decision</td></tr>
+<tr><td>Approved</td><td>—</td><td>Final</td><td>A new correction is needed to change it again</td></tr>
+</tbody></table></div>
+<h3>Employee (onboarding to separation)</h3>
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> PreJoining: record created, start date in future
+  PreJoining --> Active: start date reached
+  [*] --> Active: start date today or past
+  Active --> OnNotice: last working day set
+  OnNotice --> Active: notice withdrawn (HR, reason)
+  Active --> LongLeave: HR
+  LongLeave --> Active: HR
+  OnNotice --> Exited: day after last working day (system)
+  Exited --> Active: rehire (new start date, same ID)
+</pre>
+<h3>Overtime record</h3>
+<p>Offered (operational) → Confirmed by agent (ledger row written) → optional HR review when the monthly threshold is crossed → Reviewed. Reversal: a negative row, for example when the person left early, linked by <code>reversal_of</code>.</p>
+<h3>HR case</h3>
+<div class="tbl"><table>
+<thead><tr><th>From</th><th>To</th><th>Who</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>—</td><td>Submitted</td><td>Employee, TL (referral), HR</td><td>Category; description</td></tr>
+<tr><td>Submitted</td><td>Triaged</td><td>HR</td><td>Owner and confidentiality set</td></tr>
+<tr><td>Triaged</td><td>Under investigation · Closed (policy query answered)</td><td>Owner</td><td>Reason for direct closure</td></tr>
+<tr><td>Under investigation</td><td>Information requested ↔ Under investigation</td><td>Owner</td><td>Named recipient; due date</td></tr>
+<tr><td>Under investigation</td><td>Escalated ↔ Under investigation</td><td>Owner, senior HR</td><td>Reason</td></tr>
+<tr><td>Under investigation</td><td>Resolved</td><td>Owner</td><td>Outcome recorded</td></tr>
+<tr><td>Resolved</td><td>Follow-up due → Closed</td><td>Owner</td><td>Follow-up note</td></tr>
+<tr><td>Closed</td><td>—</td><td>Final</td><td>Reopening creates a linked new case</td></tr>
+</tbody></table></div>
+<p>All transitions are validated on the server against these tables. Unknown transitions, repeated approvals (unique key in HR_APPROVAL), changes by unauthorised roles and changes to final states are refused.</p>
+
+<!-- ============================================================ APPROVALS -->
+<h2 id="approvals">8 · Approval rules and validation</h2>
+<div class="tbl"><table>
+<thead><tr><th>Item</th><th>Approver</th><th>Validation before commit</th></tr></thead>
+<tbody>
+<tr><td>Employee create or change</td><td>HR (TL proposals: HR; contract changes: Ops)</td><td>Mandatory fields; unique ID; known team, queue, contract; dates in order; impact preview shown</td></tr>
+<tr><td>Separation</td><td>HR</td><td>Last day ≥ today (past needs correction reason); open leave after that date closed</td></tr>
+<tr><td>Leave (operational)</td><td>TL of the employee's team; never self</td><td>Coverage Green / Amber / Red; day not started; hard rules</td></tr>
+<tr><td>Leave (policy)</td><td>HR, when flagged</td><td>Type rules; notice; maximum consecutive days; balance if tracked; sick note after N days</td></tr>
+<tr><td>Attendance confirmation</td><td>TL (own team)</td><td>Shift started; no record; reason</td></tr>
+<tr><td>Attendance correction</td><td>TL (open day), HR (finalised)</td><td>Reason; never the requester; result consistent with roster</td></tr>
+<tr><td>Overtime</td><td>TL (operational, existing); HR only above the policy threshold</td><td>Contract limits, rest, weekly hours</td></tr>
+<tr><td>HR case outcome</td><td>Case owner; senior HR for highly restricted</td><td>Reason on each transition; evidence hashes stored</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ NOTIFY -->
+<h2 id="notify">9 · Notification triggers</h2>
+<div class="tbl"><table>
+<thead><tr><th>Event</th><th>Recipients</th><th>Priority · action</th></tr></thead>
+<tbody>
+<tr><td>Employee created</td><td>Admin (account task), team lead, Analyst</td><td>Normal · Admin action required</td></tr>
+<tr><td>Transfer, skill or contract change applied</td><td>Agent, old and new team leads, Analyst (with plan effect)</td><td>Info; Warning if re-plan needed (existing)</td></tr>
+<tr><td>Last working day set</td><td>Team lead, Admin, Analyst</td><td>Normal</td></tr>
+<tr><td>Exited (day after)</td><td>Admin (deactivation done or due)</td><td>Warning if deactivation failed</td></tr>
+<tr><td>No attendance record at shift start + 30 min</td><td>Team lead</td><td>Normal · confirm presence or no-show</td></tr>
+<tr><td>Correction requested</td><td>Approver (TL or HR)</td><td>Normal · action required, due 2 working days</td></tr>
+<tr><td>Correction decided</td><td>Requester, team lead</td><td>Info</td></tr>
+<tr><td>Absence pattern flagged</td><td>HR only</td><td>Normal · review</td></tr>
+<tr><td>Leave needs HR review</td><td>HR</td><td>Normal · due before the day</td></tr>
+<tr><td>Leave decided, cancelled, revoked, reversed</td><td>Agent (email copy if set up); team lead</td><td>Info</td></tr>
+<tr><td>Clarification asked</td><td>Agent</td><td>Warning · action required</td></tr>
+<tr><td>Overtime above monthly threshold</td><td>HR</td><td>Normal</td></tr>
+<tr><td>HR case submitted</td><td>HR intake (not the TL, not Ops)</td><td>Normal</td></tr>
+<tr><td>HR case information requested</td><td>Named person only</td><td>Warning · due date</td></tr>
+<tr><td>HR case overdue</td><td>Owner, then senior HR</td><td>Warning, then Critical</td></tr>
+<tr><td>Restricted outcome needing action</td><td>The one manager who must act (action text only)</td><td>Normal</td></tr>
+</tbody></table></div>
+<p>Notifications never contain case details, health information or balances. They name the record and link to it; the link re-checks access.</p>
+
+<!-- ============================================================ ACCESS -->
+<h2 id="access">10 · Ownership, access, confidentiality, audit</h2>
+<div class="tbl"><table>
+<thead><tr><th>Data</th><th>Owner</th><th>Agent</th><th>Team Lead</th><th>HR</th><th>Ops</th><th>Analyst</th><th>Admin</th></tr></thead>
+<tbody>
+<tr><td>Employee record</td><td>HR</td><td>Own (preferences editable)</td><td>Own team, read; propose</td><td>All, edit</td><td>Read (name, team, skills)</td><td>Read</td><td>Change log only</td></tr>
+<tr><td>Attendance events</td><td>System + TL</td><td>Own</td><td>Own team</td><td>All</td><td>Aggregates</td><td>Aggregates</td><td>Audit</td></tr>
+<tr><td>Corrections</td><td>TL / HR</td><td>Own</td><td>Own team</td><td>All</td><td>—</td><td>—</td><td>Audit</td></tr>
+<tr><td>Leave requests</td><td>TL / HR</td><td>Own</td><td>Own team</td><td>All (read; decide policy stage)</td><td>Read, decide (existing)</td><td>—</td><td>Audit</td></tr>
+<tr><td>Leave balances</td><td>HR / HRIS</td><td>Own</td><td>—</td><td>All</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Overtime ledger</td><td>System</td><td>Own</td><td>Own team</td><td>All</td><td>Totals</td><td>Totals</td><td>Audit</td></tr>
+<tr><td>HR cases</td><td>HR</td><td>Own raised (status, own messages)</td><td>Own referrals (status only)</td><td>By confidentiality and assignment</td><td>Action text only</td><td>—</td><td>Existence of access logs, no content</td></tr>
+</tbody></table></div>
+<ul>
+<li>All checks run in <code>services</code> on every call, with identity re-read from the stored account. Hiding a button is never the protection.</li>
+<li>Every consequential change writes an audit row (actor, role, time, action, record, before, after, reason) to the hash-chained, database-protected audit trail. Views of restricted cases are logged too.</li>
+<li>History views apply the same scope: HR sees people-data and HR events, never other people's private messages. Team Leads never see HR cases.</li>
+<li>Retention: attendance and leave records 7 years (policy value), cases per category, evidence as long as its case. Masking replaces personal fields; IDs, dates and audit rows stay.</li>
+</ul>
+
+<!-- ============================================================ ERRORS -->
+<h2 id="errors">11 · Errors, rollback, reconciliation, recovery</h2>
+<ul>
+<li><b>All or nothing.</b> Multi-record changes run in one transaction. For example, approving leave writes the approval, leave days, roster release, attendance expectation, balance and notices together, or nothing. This uses the existing transaction pattern (workspace snapshot plus a database transaction).</li>
+<li><b>Duplicates.</b> Unique keys stop repeats: one presence event per shift, one approval per stage and round, one open request per day, an idempotency key per email, and dedupe keys on notices. A double click returns "already done" instead of applying twice (existing pattern).</li>
+<li><b>Conflicting updates.</b> Version checks: an employee save from a stale screen is refused with "changed by X at Y, reload" (existing). Two servers can't overwrite each other's workspace (existing).</li>
+<li><b>Corrections without loss.</b> Nothing is edited in place. Corrections and reversals are new events pointing at what they correct (<code>supersedes_id</code>, <code>reversal_of</code>).</li>
+<li><b>Failure part-way.</b> If a downstream step fails (for example the roster check), the whole approval rolls back and the approver sees why. The request stays Under review.</li>
+<li><b>Reconciliation (nightly).</b>
+  <ul>
+  <li>Approved leave days match roster gaps.</li>
+  <li>Exited employees have no future shifts and no active account.</li>
+  <li>Overtime ledger totals match roster extensions.</li>
+  <li>HRIS balances match ShiftSense pending and taken days.</li>
+  <li>Any mismatch becomes an HR data-quality item; nothing is fixed silently.</li>
+  </ul></li>
+<li><b>Recovery.</b> Verified backups with restore drill (existing). A failed integration file is moved to "failed" with a rows-to-fix file (existing drop folder).</li>
+</ul>
+
+<!-- ============================================================ INTEGRATIONS -->
+<h2 id="integrations">System boundaries and integrations</h2>
+<div class="tbl"><table>
+<thead><tr><th>Integration</th><th>Direction and data</th><th>Trigger</th><th>Validation and reconciliation</th><th>Duplicates and failures</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>HRIS</td><td>HRIS → ShiftSense: employees, joins, exits, transfers, leave balances</td><td>Nightly file (drop folder) or API</td><td>Same converter and mandatory fields; HRIS wins on identity fields, ShiftSense on skills and preferences; nightly reconciliation report</td><td>Keyed by employee ID and effective date; failed rows held with rows-to-fix; audited as "HRIS import"</td><td><span class="pill neu">External</span> (file path exists)</td></tr>
+<tr><td>Payroll</td><td>ShiftSense → payroll: confirmed overtime hours, leave taken</td><td>Monthly export after period close</td><td>Totals checked against the ledger; period locked after export</td><td>Export ID per period; re-export marks the earlier one superseded</td><td><span class="pill neu">External</span></td></tr>
+<tr><td>Identity provider (SSO)</td><td>ShiftSense → IdP: deactivate on exit; IdP → ShiftSense: login</td><td>Event on exit; login per session</td><td>Account linked by employee ID</td><td>Retries with alert to Admin on failure</td><td><span class="pill neu">External</span></td></tr>
+<tr><td>Badge or telephony attendance</td><td>→ ShiftSense: logins, logouts</td><td>Every 15 min or nightly file</td><td>Rostered shift, started, not already recorded</td><td>Unique per shift; late files still accepted until finalisation</td><td>File import <span class="pill ok">exists</span>; live link <span class="pill neu">external</span></td></tr>
+<tr><td>Document store</td><td>Case evidence files</td><td>On upload</td><td>Hash stored in ShiftSense</td><td>Hash mismatch flags tampering</td><td><span class="pill neu">External</span></td></tr>
+</tbody></table></div>
+<p>No external system is connected today, and no real employee data is used.</p>
+
+<!-- ============================================================ SEQUENCE -->
+<h2 id="sequence">12 · Implementation order</h2>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>Delivers</th><th>Depends on</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>HR_POLICY values (via the rules store), LEAVE_TYPE, event_type on employee changes, separation automation (Exited status, account deactivation)</td><td>Existing reference data and accounts</td></tr>
+<tr><td>2</td><td>ATTENDANCE_EVENT table with migration from workspace values; derived current state; finalisation; explicit no-show confirmation</td><td>Step 1 (thresholds)</td></tr>
+<tr><td>3</td><td>ATTENDANCE_CORRECTION with TL / HR approval; absence categories; pattern review items</td><td>Step 2</td></tr>
+<tr><td>4</td><td>LEAVE_REQUEST table (moved from the workspace), leave types on requests, HR_APPROVAL with two stages, clarification, cancellation, reversal; LEAVE_BALANCE when a source exists</td><td>Steps 1–2</td></tr>
+<tr><td>5</td><td>OVERTIME_RECORD written at confirmation; compliance report; payroll export file</td><td>Step 2</td></tr>
+<tr><td>6</td><td>HR cases with confidentiality, access logging, evidence references, deadlines</td><td>Step 1 (case deadlines)</td></tr>
+<tr><td>7</td><td>HR reports from section F, with data-quality notes and small-group suppression</td><td>Steps 2–6</td></tr>
+<tr><td>8</td><td>Integrations (HRIS file, payroll export, IdP deactivation)</td><td>Steps 1, 4, 5</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ TESTS -->
+<h2 id="tests">13 · Test scenarios and acceptance criteria</h2>
+<div class="tbl"><table>
+<thead><tr><th>Scenario (ShiftSense context)</th><th>Acceptance criterion</th></tr></thead>
+<tbody>
+<tr><td>HR creates A51 in TL-2 on Banking-EN, starting next Monday</td><td>Not scheduled before Monday; Admin gets an account task; the Analyst is told; audit row present</td></tr>
+<tr><td>HR transfers A07 from TL-1 to TL-3 effective tomorrow</td><td>A07's open requests move to TL-3; tomorrow's shift that breaks a rule becomes an alert; both team leads notified</td></tr>
+<tr><td>HR sets A12's last working day to Friday</td><td>Saturday: status Exited, account inactive, no shifts after Friday, history intact</td></tr>
+<tr><td>A03's shift starts with no check-in</td><td>Shows "no attendance record"; not counted as absent in any report until TL confirms a no-show</td></tr>
+<tr><td>Feed shows A05 logged in 17 minutes late</td><td>Event with minutes_late=17, source feed; TL sees it in the lateness list</td></tr>
+<tr><td>A04 asks to correct a finalised day to "present"</td><td>TL cannot approve; HR approves with a reason; original event kept and superseded</td></tr>
+<tr><td>A06 has 3 sick days in 30 days</td><td>An HR review item appears for HR only; no notice to TL or Ops</td></tr>
+<tr><td>A01 requests 3 days of annual leave with no balance source</td><td>Request goes to HR review showing "Balance not tracked"; cannot be auto-approved</td></tr>
+<tr><td>TL approves a Red day for A02; HR policy then rejects</td><td>Final state Rejected; roster unchanged; agent told once with both reasons</td></tr>
+<tr><td>Approval of A08's leave fails at the roster check</td><td>Nothing changes (no leave days, no balance change); request stays Under review</td></tr>
+<tr><td>Double click on Approve</td><td>One approval row; second click returns "already decided"</td></tr>
+<tr><td>A09 confirms a 2-hour extension</td><td>Ledger row with rate from A09's contract; weekly hours within limit; payroll export includes it</td></tr>
+<tr><td>TL-1 refers a concern about A10</td><td>HR case created; TL-1 sees only "received"; TL-2, Ops and Analyst see nothing; access is logged</td></tr>
+<tr><td>HR tries to approve a staffing fix or send a reminder</td><td>Refused on the server (already proven: 184-combination matrix)</td></tr>
+<tr><td>TL tries to change another team's employee or a contract</td><td>Refused on the server (already proven)</td></tr>
+<tr><td>Forged session: HR claims Team Lead, or Team Lead claims HR</td><td>Refused; identity re-read from the stored account (already proven)</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ OPEN -->
+<h2 id="open">Assumptions and open decisions</h2>
+<div class="tbl"><table>
+<thead><tr><th>Question</th><th>Proposal</th></tr></thead>
+<tbody>
+<tr><td>Who deactivates accounts on exit?</td><td>Automatic on the day after the last working day, audited, with Admin notified (security first). Alternative: Admin task only.</td></tr>
+<tr><td>Where do leave balances come from?</td><td>HRIS file if EXL provides one; otherwise HR enters opening balances; otherwise "Not tracked".</td></tr>
+<tr><td>Which leave needs HR review?</td><td>Paid types without a tracked balance, more than 5 consecutive days, sick leave over 2 days (evidence).</td></tr>
+<tr><td>Finalisation window for attendance</td><td>48 hours after shift end.</td></tr>
+<tr><td>Absence pattern thresholds</td><td>3 unplanned in 30 days; 2 Monday/Friday in 4 weeks. These are signals only.</td></tr>
+<tr><td>Does HR ever approve overtime?</td><td>Only above a monthly threshold (default off).</td></tr>
+<tr><td>Who may see restricted HR cases?</td><td>The assigned caseworker and senior HR. This needs a "senior HR" permission inside the HR role (no new top-level role).</td></tr>
+<tr><td>Retention periods</td><td>To be set by EXL HR and legal.</td></tr>
+<tr><td>Can HR submit leave on an employee's behalf?</td><td>Not proposed. If needed later: an explicit on-behalf action, audited with both names.</td></tr>
+</tbody></table></div>
+<p><b>Assumptions:</b> simulated data only; no external system connected; the existing operational workflows (recovery, publishing, Ops decisions) stay unchanged; HR gets no operational authority by default.</p>
+
+<!-- ============================================================ STATUS -->
+<h2 id="status">Implementation status · Decision Record v1.0 (19 Oct 2026)</h2>
+<p>The open decisions above were settled in the HR Final Implementation Decision Record and built. Every rule is enforced in the server layer and covered by tests (simulated data).</p>
+<div class="tbl"><table>
+<thead><tr><th>Decision</th><th>Built as</th><th>Still pending</th></tr></thead>
+<tbody>
+<tr><td>HR-01 Separation</td><td>Record → confirm by a different HR user → access ends at 00:00 Asia/Kolkata on the day after the last working day (approved): sessions and sign-in refused from that moment, account deactivated and codes revoked by an idempotent run; rescind/correct audited; history kept.</td><td>—</td></tr>
+<tr><td>HR-02 Opening balances</td><td>HR-entered, verified by a second HR user; only verified balances count; approval = debit, revoke = credit, corrections = adjustments with a reason.</td><td>—</td></tr>
+<tr><td>HR-03 Review triggers</td><td>Unverified balance, more than 5 consecutive days, sick over 2 days: each creates an HR review task; HR recommends, the team lead decides; sick details masked for team leads.</td><td>— (calendar days approved: 6 or more calendar days, weekends and holidays included)</td></tr>
+<tr><td>HR-04 Attendance lock</td><td>Locked 48 h after shift end; afterwards only an HR-reviewed correction request; original kept.</td><td>—</td></tr>
+<tr><td>HR-05 Absence flags</td><td>Confidential, HR only, no duplicates, re-counted after corrections; open / under review / resolved / dismissed.</td><td>3 qualifying unplanned absences in any rolling 30 calendar days (approved); counts no-show records and reported absences. Off until Senior HR enables it after the validation preview.</td></tr>
+<tr><td>HR-06 Overtime approval</td><td>Off by default; worked (with a presence record) vs scheduled shown apart; no pay.</td><td>Threshold, unit, scope, policy reference, dates.</td></tr>
+<tr><td>HR-07 Restricted cases</td><td>Caseworker and Senior HR only (a permission inside the HR role, granted by Admin); every access logged; notices carry no details.</td><td>—</td></tr>
+<tr><td>HR-08 Retention</td><td>Register shown; no periods; no automated deletion.</td><td>All retention periods (EXL HR and legal). Not a decision to keep records indefinitely.</td></tr>
+</tbody></table></div>
+
+<footer>ShiftSense HR Workflow Design · draft 1 for review · Group 24 (Saswata Saha, Supratik Sarkar) · all data simulated</footer>
+</main>
+</div>

@@ -1,0 +1,4 @@
+Contract name,Contracted paid hours per week,Contracted shifts per week,Maximum paid hours per week,Maximum shifts per week,Night shifts allowed,Maximum night shifts per week,Allowed shift types,Minimum rest (h),Overtime days per fortnight,Maximum extension (h),Hourly rate (Rs),OT multiplier
+Full-time 40h,40,5,50,6,Yes,4,,11,1,2,250,2
+Part-time 24h,24,3,32,4,No,0,Morning; Day; Evening,11,1,1,260,2
+Evening-Night 40h,40,5,48,6,Yes,4,Evening; Night,12,1,2,275,2

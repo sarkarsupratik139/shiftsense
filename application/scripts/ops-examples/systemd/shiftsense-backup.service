@@ -1,0 +1,9 @@
+[Unit]
+Description=ShiftSense verified backup (keeps the newest 14)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/shiftsense
+EnvironmentFile=/etc/shiftsense/env
+ExecStart=/opt/shiftsense/.venv/bin/python -m shiftsense.backup create --keep 14
+ExecStartPost=/opt/shiftsense/.venv/bin/python -m shiftsense.backup drill

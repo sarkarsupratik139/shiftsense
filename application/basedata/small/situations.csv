@@ -1,0 +1,3 @@
+Reference,Situation,Title,Starts,Ends,Queues affected,Capacity lost %,Volume change %,Teams affected,Description
+SIT-1,planned_outage,PaySecure core banking maintenance,2026-10-10 01:00,2026-10-10 05:00,Banking-EN; Banking-HI,50,,,Vendor maintenance window
+SIT-2,campaign,InsureCo renewal campaign,2026-10-15 09:00,2026-10-16 21:00,Claims-EN,,15,,Marketing campaign; expect more calls

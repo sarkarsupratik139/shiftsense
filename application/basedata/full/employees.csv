@@ -1,0 +1,121 @@
+Employee ID,Full name,Team,Primary queue,Other trained queues,Contract type,Night shifts allowed,Preferred shift,Preferred day off,Start date,Last working day,Status
+A01,Aarav K.,TL-1,Claims-EN,,Full-time 40h,No,Morning,Saturday,02/06/2024,,Active
+A02,Priya S.,TL-2,Banking-EN,,Full-time 40h,No,Day,Wednesday,15/03/2024,,Active
+A03,Rohan M.,TL-3,Claims-HI,Banking-HI,Part-time 24h,Yes,Morning,Saturday,14/01/2023,,Active
+A04,Ananya R.,TL-4,Banking-HI,,Full-time 40h,Yes,Morning,Thursday,23/10/2024,,Active
+A05,Vikram P.,TL-5,Claims-EN,,Full-time 40h,Yes,Morning,Friday,07/06/2026,,Active
+A06,Sneha G.,TL-1,Telecom-EN,,Full-time 40h,Yes,Night,Tuesday,03/12/2023,,Active
+A07,Arjun V.,TL-7,Banking-HI,,Full-time 40h,No,Day,Thursday,30/11/2025,,Active
+A08,Kavya D.,TL-8,Claims-EN,,Full-time 40h,Yes,Day,Monday,18/08/2023,,Active
+A09,Rahul B.,TL-1,Claims-EN,Banking-EN,Full-time 40h,No,Morning,Monday,02/12/2023,,Active
+A10,Meera T.,TL-2,Banking-EN,,Full-time 40h,Yes,Day,Thursday,06/05/2024,,Active
+A11,Karan N.,TL-3,Banking-EN,Telecom-EN,Full-time 40h,Yes,Day,Sunday,13/12/2024,,Active
+A12,Divya A.,TL-4,Banking-HI,,Full-time 40h,Yes,Night,Thursday,09/09/2024,,Active
+A13,Aditya J.,TL-5,Telecom-EN,,Full-time 40h,Yes,Night,Monday,10/11/2025,,Active
+A14,Pooja K.,TL-6,Claims-EN,,Full-time 40h,Yes,Day,Thursday,30/12/2022,,Active
+A15,Siddharth S.,TL-7,Banking-EN,,Full-time 40h,Yes,Evening,Monday,18/07/2025,,Active
+A16,Neha M.,TL-8,Telecom-EN,Claims-EN,Part-time 24h,No,Evening,Wednesday,05/08/2024,,Active
+A17,Manish R.,TL-1,Telecom-EN,Claims-EN,Full-time 40h,Yes,Morning,Monday,02/04/2026,,Active
+A18,Riya P.,TL-2,Claims-EN,,Full-time 40h,Yes,Day,Saturday,23/06/2024,,Active
+A19,Amit G.,TL-3,Telecom-EN,Telecom-HI,Full-time 40h,No,Day,Wednesday,28/12/2022,,Active
+A20,Isha V.,TL-4,Telecom-HI,,Full-time 40h,Yes,Day,Sunday,27/11/2022,,Active
+A21,Nikhil D.,TL-5,Telecom-HI,,Full-time 40h,Yes,Evening,Monday,29/04/2024,,Active
+A22,Shreya B.,TL-6,Banking-EN,,Full-time 40h,Yes,Night,Tuesday,22/10/2022,,Active
+A23,Varun T.,TL-7,Claims-EN,,Full-time 40h,No,Evening,Sunday,07/05/2026,,Active
+A24,Tanvi N.,TL-8,Telecom-EN,,Full-time 40h,No,Day,Thursday,11/01/2024,,Active
+A25,Harsh A.,TL-1,Claims-EN,,Full-time 40h,No,Day,Friday,24/06/2023,,Active
+A26,Nisha J.,TL-2,Claims-HI,,Part-time 24h,Yes,Morning,Saturday,28/11/2024,,Active
+A27,Gaurav K.,TL-3,Telecom-EN,,Evening-Night 40h,Yes,Morning,Sunday,16/08/2024,,Active
+A28,Aditi S.,TL-4,Telecom-HI,Claims-HI; Telecom-EN,Full-time 40h,Yes,Evening,Tuesday,10/01/2026,,Active
+A29,Kunal M.,TL-5,Banking-EN,,Evening-Night 40h,Yes,Night,Monday,17/09/2024,,Active
+A30,Sakshi R.,TL-6,Banking-HI,Claims-HI,Full-time 40h,No,Evening,Thursday,16/03/2026,,Active
+A31,Deepak P.,TL-7,Claims-EN,,Full-time 40h,Yes,Night,Monday,15/03/2023,,Active
+A32,Anjali G.,TL-8,Claims-EN,Claims-HI; Telecom-EN,Full-time 40h,Yes,Day,Thursday,25/05/2025,,Active
+A33,Rajesh V.,TL-1,Banking-HI,,Part-time 24h,Yes,Evening,Wednesday,18/07/2025,,Active
+A34,Swati D.,TL-2,Banking-EN,,Full-time 40h,No,Morning,Saturday,23/07/2026,,Active
+A35,Vivek B.,TL-3,Claims-EN,Telecom-EN,Full-time 40h,Yes,Evening,Sunday,13/06/2026,,Active
+A36,Pallavi T.,TL-4,Claims-HI,,Evening-Night 40h,Yes,Day,Monday,03/04/2023,,Active
+A37,Sanjay N.,TL-5,Telecom-EN,Banking-EN,Full-time 40h,No,Morning,Sunday,18/02/2025,,Active
+A38,Kriti A.,TL-6,Banking-EN,,Full-time 40h,Yes,Evening,Thursday,18/09/2025,,Active
+A39,Abhishek J.,TL-7,Banking-EN,Telecom-EN,Full-time 40h,Yes,Evening,Wednesday,20/09/2022,,Active
+A40,Ritu K.,TL-8,Banking-EN,,Full-time 40h,No,Day,Tuesday,20/12/2025,,Active
+A41,Mohit S.,TL-1,Telecom-EN,,Full-time 40h,No,Day,Thursday,15/03/2026,,Active
+A42,Simran M.,TL-2,Claims-EN,,Part-time 24h,No,Morning,Friday,28/08/2024,,Active
+A43,Tarun R.,TL-3,Banking-HI,Claims-HI,Full-time 40h,No,Morning,Wednesday,08/07/2026,,Active
+A44,Jyoti P.,TL-4,Banking-EN,Banking-HI,Part-time 24h,No,Day,Wednesday,29/01/2024,,Active
+A45,Ashish G.,TL-5,Claims-EN,,Full-time 40h,Yes,Night,Wednesday,01/01/2026,,Active
+A46,Nandini V.,TL-6,Banking-HI,,Part-time 24h,Yes,Day,Tuesday,09/06/2026,,Active
+A47,Yash D.,TL-7,Telecom-EN,,Full-time 40h,Yes,Day,Tuesday,21/01/2023,,Active
+A48,Payal B.,TL-8,Banking-HI,Telecom-HI,Full-time 40h,Yes,Night,Monday,04/02/2026,,Active
+A49,Sameer T.,TL-1,Claims-EN,,Full-time 40h,Yes,Morning,Tuesday,10/09/2024,,Active
+A50,Megha N.,TL-2,Claims-EN,Telecom-EN,Part-time 24h,Yes,Day,Friday,24/10/2022,,Active
+A51,Aarav A.,TL-3,Telecom-HI,,Full-time 40h,Yes,Evening,Tuesday,09/10/2022,,Active
+A52,Priya J.,TL-4,Telecom-HI,,Full-time 40h,Yes,Morning,Friday,11/03/2024,,Active
+A53,Rohan K.,TL-5,Telecom-EN,,Full-time 40h,Yes,Night,Monday,22/03/2023,,Active
+A54,Ananya S.,TL-6,Claims-EN,Banking-EN,Full-time 40h,Yes,Night,Wednesday,02/12/2022,,Active
+A55,Vikram M.,TL-7,Claims-HI,Telecom-HI,Part-time 24h,No,Day,Monday,20/12/2023,,Active
+A56,Sneha R.,TL-8,Telecom-EN,Banking-EN; Claims-EN,Full-time 40h,Yes,Night,Wednesday,07/10/2025,,Active
+A57,Arjun P.,TL-1,Telecom-HI,,Full-time 40h,Yes,Day,Sunday,27/05/2025,,Active
+A58,Kavya G.,TL-2,Telecom-HI,,Full-time 40h,Yes,Morning,Saturday,11/06/2023,,Active
+A59,Rahul V.,TL-3,Banking-HI,Claims-HI; Telecom-HI,Full-time 40h,No,Evening,Sunday,26/10/2022,,Active
+A60,Meera D.,TL-4,Claims-HI,,Full-time 40h,No,Evening,Friday,08/01/2026,,Active
+A61,Karan B.,TL-5,Telecom-HI,,Full-time 40h,Yes,Evening,Saturday,23/02/2023,,Active
+A62,Divya T.,TL-6,Claims-HI,,Full-time 40h,Yes,Evening,Wednesday,24/02/2024,,Active
+A63,Aditya N.,TL-7,Banking-HI,,Full-time 40h,No,Evening,Thursday,23/06/2025,,Active
+A64,Pooja A.,TL-8,Claims-EN,,Part-time 24h,Yes,Evening,Tuesday,05/06/2023,,Active
+A65,Siddharth J.,TL-1,Telecom-EN,,Full-time 40h,Yes,Day,Thursday,24/05/2026,,Active
+A66,Neha K.,TL-2,Claims-EN,,Full-time 40h,Yes,Morning,Wednesday,08/12/2025,,Active
+A67,Manish S.,TL-3,Banking-EN,,Full-time 40h,Yes,Evening,Wednesday,16/10/2023,,Active
+A68,Riya M.,TL-4,Banking-HI,Claims-HI,Full-time 40h,Yes,Night,Sunday,28/03/2026,,Active
+A69,Amit R.,TL-5,Telecom-EN,,Full-time 40h,No,Day,Saturday,23/06/2023,,Active
+A70,Isha P.,TL-6,Telecom-EN,,Full-time 40h,Yes,Night,Saturday,19/01/2024,,Active
+A71,Nikhil G.,TL-7,Telecom-HI,Claims-HI,Evening-Night 40h,Yes,Night,Friday,01/04/2024,,Active
+A72,Shreya V.,TL-8,Claims-HI,,Full-time 40h,Yes,Evening,Monday,16/09/2024,,Active
+A73,Varun D.,TL-1,Telecom-EN,Claims-EN,Full-time 40h,No,Morning,Sunday,08/03/2025,,Active
+A74,Tanvi B.,TL-2,Claims-HI,Banking-HI; Telecom-HI,Full-time 40h,Yes,Night,Saturday,23/06/2024,,Active
+A75,Harsh T.,TL-3,Banking-EN,Claims-EN,Full-time 40h,No,Day,Thursday,05/09/2022,,Active
+A76,Nisha N.,TL-4,Banking-EN,,Full-time 40h,No,Evening,Sunday,11/11/2023,,Active
+A77,Gaurav A.,TL-5,Telecom-EN,Telecom-HI,Full-time 40h,Yes,Evening,Friday,12/07/2023,,Active
+A78,Aditi J.,TL-6,Claims-EN,,Full-time 40h,Yes,Evening,Monday,05/04/2023,,Active
+A79,Kunal K.,TL-7,Telecom-HI,,Full-time 40h,Yes,Evening,Thursday,22/06/2023,,Active
+A80,Sakshi S.,TL-8,Telecom-EN,Telecom-HI,Full-time 40h,Yes,Morning,Friday,01/02/2024,,Active
+A81,Deepak M.,TL-1,Claims-EN,,Full-time 40h,No,Morning,Saturday,08/03/2023,,Active
+A82,Anjali R.,TL-2,Banking-EN,,Full-time 40h,Yes,Day,Friday,28/04/2023,,Active
+A83,Rajesh P.,TL-3,Banking-EN,,Full-time 40h,Yes,Night,Tuesday,26/03/2025,,Active
+A84,Swati G.,TL-4,Claims-EN,,Full-time 40h,Yes,Evening,Sunday,04/10/2022,,Active
+A85,Vivek V.,TL-5,Banking-EN,,Full-time 40h,No,Morning,Saturday,16/11/2025,,Active
+A86,Pallavi D.,TL-6,Claims-HI,,Full-time 40h,Yes,Day,Tuesday,12/09/2022,,Active
+A87,Sanjay B.,TL-7,Telecom-EN,Claims-EN; Telecom-HI,Full-time 40h,Yes,Morning,Saturday,23/07/2026,,Active
+A88,Kriti T.,TL-8,Claims-EN,,Full-time 40h,Yes,Night,Wednesday,18/01/2025,,Active
+A89,Abhishek N.,TL-1,Claims-HI,,Full-time 40h,Yes,Morning,Wednesday,19/09/2023,,Active
+A90,Ritu A.,TL-2,Telecom-EN,Claims-EN,Full-time 40h,No,Day,Monday,23/08/2025,,Active
+A91,Mohit J.,TL-3,Banking-EN,,Full-time 40h,No,Day,Monday,26/09/2025,,Active
+A92,Simran K.,TL-4,Claims-HI,,Full-time 40h,Yes,Morning,Friday,13/03/2023,,Active
+A93,Tarun S.,TL-5,Claims-EN,,Full-time 40h,Yes,Day,Saturday,26/12/2022,,Active
+A94,Jyoti M.,TL-6,Banking-EN,,Full-time 40h,Yes,Night,Thursday,18/04/2025,,Active
+A95,Ashish R.,TL-7,Banking-HI,Claims-HI,Full-time 40h,No,Evening,Saturday,24/06/2025,,Active
+A96,Nandini P.,TL-8,Telecom-EN,,Full-time 40h,Yes,Night,Monday,03/06/2023,,Active
+A97,Yash G.,TL-1,Telecom-HI,,Full-time 40h,Yes,Night,Saturday,22/10/2023,,Active
+A98,Payal V.,TL-2,Banking-EN,,Full-time 40h,Yes,Night,Monday,20/10/2025,,Active
+A99,Sameer D.,TL-3,Banking-EN,,Full-time 40h,Yes,Evening,Monday,09/12/2025,,Active
+A100,Megha B.,TL-4,Claims-EN,,Full-time 40h,No,Morning,Tuesday,28/11/2025,,Active
+A101,Aarav T.,TL-5,Telecom-HI,Claims-HI; Telecom-EN,Full-time 40h,Yes,Night,Wednesday,31/03/2026,,Active
+A102,Priya N.,TL-6,Claims-EN,,Full-time 40h,Yes,Morning,Monday,20/11/2024,,Active
+A103,Rohan A.,TL-7,Telecom-EN,,Full-time 40h,Yes,Evening,Sunday,24/12/2022,,Active
+A104,Ananya J.,TL-8,Claims-HI,,Full-time 40h,Yes,Day,Saturday,19/01/2025,,Active
+A105,Vikram K.,TL-1,Claims-EN,,Full-time 40h,Yes,Night,Sunday,25/09/2025,,Active
+A106,Sneha S.,TL-2,Claims-EN,,Full-time 40h,No,Evening,Friday,11/04/2026,,Active
+A107,Arjun M.,TL-3,Claims-HI,,Full-time 40h,No,Morning,Thursday,15/07/2023,,Active
+A108,Kavya R.,TL-4,Banking-EN,Claims-EN; Telecom-EN,Full-time 40h,No,Day,Monday,26/10/2022,,Active
+A109,Rahul P.,TL-5,Banking-EN,,Full-time 40h,Yes,Night,Saturday,13/12/2025,,Active
+A110,Meera G.,TL-6,Claims-EN,Claims-HI; Telecom-EN,Full-time 40h,No,Evening,Friday,27/04/2025,,Active
+A111,Karan V.,TL-7,Banking-EN,,Full-time 40h,Yes,Evening,Monday,10/05/2025,,Active
+A112,Divya D.,TL-8,Telecom-EN,,Full-time 40h,No,Day,Friday,21/02/2026,,Active
+A113,Aditya B.,TL-1,Claims-EN,,Full-time 40h,Yes,Morning,Saturday,03/10/2025,,Active
+A114,Pooja T.,TL-2,Claims-EN,,Full-time 40h,No,Day,Thursday,16/08/2025,,Active
+A115,Siddharth N.,TL-3,Banking-EN,,Full-time 40h,No,Day,Sunday,22/12/2024,,Active
+A116,Neha A.,TL-4,Claims-HI,,Full-time 40h,Yes,Morning,Sunday,23/04/2026,,Active
+A117,Manish J.,TL-5,Telecom-EN,,Full-time 40h,Yes,Evening,Thursday,19/05/2023,,Active
+A118,Riya K.,TL-6,Banking-EN,Telecom-EN,Full-time 40h,No,Morning,Thursday,21/05/2024,,Active
+A119,Amit S.,TL-7,Banking-HI,Banking-EN,Full-time 40h,Yes,Morning,Sunday,10/11/2023,15/10/2026,On notice
+A120,Isha M.,TL-8,Claims-EN,Claims-HI,Full-time 40h,Yes,Day,Saturday,12/10/2026,,Active

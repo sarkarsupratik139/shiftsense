@@ -1,0 +1,5 @@
+Client,Queue,Service level,Opening hours,AHT,Priority
+InsureCo (fictional),Claims-EN,80% in 20s,24x7,6 min,High
+InsureCo (fictional),Claims-HI,80% in 30s,09:00-21:00,7 min,Medium
+PaySecure Bank (fictional),Banking-EN,80% in 20s,24x7,5 min,High
+PaySecure Bank (fictional),Banking-HI,80% in 30s,09:00-21:00,5 min 30 s,Medium

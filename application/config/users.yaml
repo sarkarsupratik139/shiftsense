@@ -1,0 +1,96 @@
+# FAKE demo accounts for the ShiftSense PoC. Passwords are listed on the login screen.
+# Hashes: PBKDF2-SHA256, 100k iterations, salt 'shiftsense:<username>'. Real deployments use SSO.
+roles:
+  # Six business roles. pages: first entry is the home screen.
+  # Permissions are enforced on the server in shiftsense/services.py; read-only in the app.
+  admin:
+    label: Admin
+    pages: [admin]
+    permissions: [governance, view_audit, all_teams, manage_accounts, propose_governance_rules]
+  analyst:
+    # forecasting, planning and publication + demo handling (scenario, clock, import)
+    label: Analyst
+    pages: [planner, data, demo]
+    permissions: [replan, all_teams, manage_demo, run_clock, live_clock, import, escalate_risk, manage_data, report_situation]
+  team_lead:
+    label: Team Lead
+    pages: [team]
+    permissions: [report_absence, decide_fix, approve_requests, message, send_reminder, propose_data, report_situation]
+  ops_head:
+    label: Ops
+    pages: [ops]
+    permissions: [ops_decide, approve_requests, report_spike, view_audit, all_teams, message, approve_data, manage_service_levels, report_situation]
+  hr:
+    # people data: employee details, employment contracts, leave; decides team leads' agent proposals
+    label: HR
+    pages: [hr]
+    permissions: [manage_people, all_teams]
+  agent:
+    label: Agent
+    pages: [me]
+    permissions: [request_leave, report_self, message, own_preferences]
+users:
+  admin:
+    name: Kiran Rao
+    role: admin
+    demo_password: "admin@123"
+    password_hash: ccc53a7070a53ba18ebcb797dddd9b5343d450b8837f857d49c00a93a958400f
+  analyst:
+    name: Meera Iyer
+    role: analyst
+    demo_password: "analyst@123"
+    password_hash: cd213fc8c121c788696671b92fe368175ab1d5a93458d32c728e9f62db662001
+  tl1:
+    name: Rohit Verma
+    role: team_lead
+    team: TL-1
+    demo_password: "tl1@123"
+    password_hash: 4f3635c6933151db91d133b68d9ee9b416fb5ec392c5fbeb0d0914fc6626c4cf
+  tl2:
+    name: Fatima Khan
+    role: team_lead
+    team: TL-2
+    demo_password: "tl2@123"
+    password_hash: 5e0821d3950f841bd2c21b0710613aa51ab5d250e9885aeb833f9d96830f0950
+  ops:
+    name: Anil Desai
+    role: ops_head
+    demo_password: "ops@123"
+    password_hash: e2ff7cb954b17b967217e104eca572f377faaefdfd3c73685b162745f28278ad
+  aarav:
+    name: Aarav K.
+    role: agent
+    agent_id: A01
+    team: TL-1
+    demo_password: "agent@123"
+    password_hash: 1ed3b0adc44dba626a93a7572bb1dbde2e4c28199c2306247b693e11da93d961
+  sneha:
+    name: Sneha G.
+    role: agent
+    agent_id: A06
+    team: TL-1
+    demo_password: "agent@123"
+    password_hash: 452a0ed0c374bc04edc74fbd17220864b15b83c7e511c1f74c1587e80ccb369d
+  priya:
+    name: Priya S.
+    role: agent
+    agent_id: A02
+    team: TL-2
+    demo_password: "agent@123"
+    password_hash: ba5ee2b9764cd67e7bc788f684be450a0a5167f8b5c0895150049809c8e90416
+  demo:
+    name: Demo Analyst
+    role: analyst
+    demo_password: "demo@123"
+    password_hash: 59c1cef3cb26c6cd6d401162f4322389a29e875d465bf7b036754cc6df064725
+  hr:
+    name: Nisha Menon
+    role: hr
+    demo_password: hr@123
+    password_hash: 67f5e0a6e3d623036a557e39723fc4ed1f6eef12f8673a0eb72a900b63daf92b
+  hrlead:
+    name: Anita Rao
+    role: hr
+    extra_permissions: [senior_hr]
+    demo_password: hrlead@123
+    password_hash: 16644f5cd0417cfd6631994f7826dbf8713c281424ae6f6d1e070ae6b85f4a76

@@ -1,0 +1,17 @@
+# ShiftSense scheduled jobs: example crontab for the app server (Linux). Install with `crontab -e`.
+# Paths assume the app lives in /opt/shiftsense with its virtualenv in .venv, and the environment file holds
+# SHIFTSENSE_DATABASE_URL (and nothing else secret is put on these lines).
+SHELL=/bin/bash
+APP=/opt/shiftsense
+ENVFILE=/etc/shiftsense/env
+
+# 01:30 every night: verified backup, keep the newest 14
+30 1 * * *  set -a; . $ENVFILE; cd $APP && .venv/bin/python -m shiftsense.backup create --keep 14 >> data/jobs.log 2>&1
+# 01:45 every night: rehearse a restore of the newest backup into a throw-away copy
+45 1 * * *  set -a; . $ENVFILE; cd $APP && .venv/bin/python -m shiftsense.backup drill >> data/jobs.log 2>&1
+# 05:00 every day: stage files from the drop folder (people data as HR, volumes/attendance as the Analyst);
+# the running app applies them on its next refresh, re-checking the account's permissions
+0 5 * * *   set -a; . $ENVFILE; cd $APP && .venv/bin/python -m shiftsense.dropfolder run --as hr >> data/jobs.log 2>&1
+5 5 * * *   set -a; . $ENVFILE; cd $APP && .venv/bin/python -m shiftsense.dropfolder run --as analyst >> data/jobs.log 2>&1
+# every 15 minutes: health check (exit code 1 on an essential failure; point your monitoring at jobs.log)
+*/15 * * * * set -a; . $ENVFILE; cd $APP && .venv/bin/python -m shiftsense.health >> data/health.log 2>&1

@@ -1,0 +1,24 @@
+Rule,Description,Value,Unit
+min_rest_hours,Minimum rest between shifts,11.0,h
+max_weekly_hours,Maximum paid hours per week,50.0,h
+contracted_shifts_per_week,Default contracted shifts per week,5.0,shifts
+max_shifts_per_week,Maximum shifts per week,6.0,shifts
+max_nights_per_week,Maximum night shifts per week,4.0,nights
+max_ot_days_per_horizon,Overtime days per fortnight,1.0,days
+max_daily_hours,Maximum daily span,11.0,h
+max_extension_hours,Maximum extension,2.0,h
+staffing.shrinkage,Shrinkage,0.3,share 0–1
+staffing.max_occupancy,Maximum occupancy,0.85,share 0–1
+requests.green_buffer,Spare staff needed for instant approval,1.0,people
+recovery.tl_overdue_hours,Team lead deadline before Ops is told,2.0,h
+recovery.data_alert_days,Days after today that get alerts after a data change (0 = today only),1.0,days
+recovery.situation_review_hours,Default reminder to update an open-ended situation,2.0,h
+costs.redeploy_cost,Redeployment cost,150.0,₹
+costs.swap_cost,Swap cost,200.0,₹
+costs.hourly_rate,Default hourly rate,250.0,₹
+costs.ot_multiplier,Default overtime multiplier,2.0,×
+governance.approval_gap,Approval-rate gap that flags a review,0.35,share 0–1
+governance.min_requests,Minimum decided requests before comparing,3.0,requests
+governance.ot_repeat,Repeated overtime that flags a review,2.0,times
+governance.swap_pair_repeat,Repeated swaps that flag a review,2.0,times
+governance.overrides,Team-lead overrides that flag a review,3.0,times

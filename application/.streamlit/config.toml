@@ -1,0 +1,33 @@
+[server]
+headless = true
+runOnSave = false
+# No hot-reload of code on a running server: the shared in-memory workspace must keep matching its classes.
+# After changing code, restart the app.
+fileWatcherType = "none"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"
+
+# Light and dark themes share the design tokens in ui_kit.TOKENS (keep both in sync).
+# Streamlit follows the viewer's system setting; either can be chosen in the app menu.
+[theme]
+font = "sans serif"
+
+[theme.light]
+primaryColor = "#1f5f8b"
+backgroundColor = "#f4f6f8"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#16202b"
+borderColor = "#dbe1e8"
+linkColor = "#1f5f8b"
+
+[theme.dark]
+primaryColor = "#2b6a99"
+backgroundColor = "#10151c"
+secondaryBackgroundColor = "#161d26"
+textColor = "#e3e8ee"
+borderColor = "#2a3441"
+linkColor = "#7cb3dc"

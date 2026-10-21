@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="ShiftSense">
+  <rect x="2" y="8" width="24" height="24" rx="6" fill="#3b82c4"/>
+  <path d="M8 24 L13 17 L17 21 L21 14" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="34" y="27" font-family="IBM Plex Sans, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#3b82c4">ShiftSense</text>
+</svg>

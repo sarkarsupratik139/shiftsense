@@ -1,0 +1,518 @@
+<title>ShiftSense Data Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a reference handbook — sticky contents rail on wide screens, one readable column, tables scroll in place.
+   Palette and type follow the ShiftSense app's own design tokens (ui_kit.TOKENS, IBM Plex). */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18202b; --muted:#566173; --rule:#dde2ea;
+  --accent:#1f5f8b; --accent-soft:#e6eff6; --code:#eef1f5;
+  --crit:#a3262a; --crit-bg:#fbeaea; --warn:#8a5a00; --warn-bg:#fdf3dc; --ok:#1d6b3c; --ok-bg:#e5f4ea;
+  --info:#1f5f8b; --info-bg:#e6eff6; --neu:#4a5363; --neu-bg:#eceff3;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-display:'IBM Plex Serif',Georgia,'Times New Roman',serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --paper:#171e27; --ink:#e4e9f0; --muted:#9aa6b6; --rule:#2a3442;
+  --accent:#7db4dc; --accent-soft:#1b2b3a; --code:#212a35;
+  --crit:#f19a9a; --crit-bg:#3a1d20; --warn:#e9c06a; --warn-bg:#362b14; --ok:#86d2a2; --ok-bg:#173022;
+  --info:#7db4dc; --info-bg:#1b2b3a; --neu:#b4bdca; --neu-bg:#232b36; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;
+  grid-template-columns:230px minmax(0,1fr);gap:40px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);
+  overflow:auto;font-size:13.5px;padding-right:6px}
+nav.toc b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:3px 8px;border-left:2px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{border-left-color:var(--accent);color:var(--accent);outline:none}
+main{min-width:0}
+header.cover{border-bottom:1px solid var(--rule);padding-bottom:22px;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,4.4vw,44px);line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.25;margin:56px 0 8px;padding-top:8px;
+  border-top:1px solid var(--rule);text-wrap:balance;scroll-margin-top:16px}
+h3{font-size:19px;font-weight:600;margin:30px 0 6px;scroll-margin-top:16px}
+h4{font-size:15px;font-weight:600;margin:20px 0 4px;color:var(--accent)}
+p,li{max-width:72ch}
+p{margin:8px 0}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+a{color:var(--accent)}
+.lede{font-size:18px;color:var(--muted);max-width:68ch}
+code,.mono{font-family:var(--f-mono);font-size:.88em;background:var(--code);padding:1px 5px;border-radius:4px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0 6px}
+.fact{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 12px}
+.fact b{display:block;font-size:22px;font-variant-numeric:tabular-nums;font-family:var(--f-display)}
+.fact span{font-size:13px;color:var(--muted)}
+.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.loop span{background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;padding:4px 10px;border-radius:999px}
+.loop i{color:var(--muted);font-style:normal}
+.note{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:6px;padding:10px 14px;margin:14px 0}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.tbl{overflow-x:auto;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;border-bottom:1px solid var(--rule)}
+th{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--neu-bg);font-weight:600}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;line-height:1.6}
+.crit{color:var(--crit);background:var(--crit-bg)} .warn{color:var(--warn);background:var(--warn-bg)}
+.ok{color:var(--ok);background:var(--ok-bg)} .info{color:var(--info);background:var(--info-bg)} .neu{color:var(--neu);background:var(--neu-bg)}
+dl.gloss{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:0;margin:12px 0;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+dl.gloss dt,dl.gloss dd{padding:8px 12px;border-bottom:1px solid var(--rule);margin:0}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{color:var(--ink)}
+.role{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:4px 18px 14px;margin:16px 0}
+.role .who{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13.5px;color:var(--muted);margin:6px 0 4px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:3px 9px}
+.flow i{color:var(--muted);font-style:normal}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:14px;color:var(--muted);font-size:13px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:8px}
+  nav.toc{position:static;max-height:none;border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:6px 10px 12px}
+  dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dt{border-bottom:none;padding-bottom:0}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style><div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Start here</b>
+  <a href="#decided">What is decided</a>
+  <a href="#principles">Principles</a>
+  <a href="#owners">Who owns which data</a>
+  <b>Inputs</b>
+  <a href="#in-employee">Employee details</a>
+  <a href="#in-contract">Employment contracts</a>
+  <a href="#in-client">Client contracts and service levels</a>
+  <a href="#in-rules">Rules and policies</a>
+  <a href="#in-events">Special conditions and events</a>
+  <a href="#in-leave">Leave and availability</a>
+  <a href="#in-volume">Call volumes</a>
+  <a href="#in-attendance">Attendance feed</a>
+  <a href="#in-accounts">Sign-in accounts</a>
+  <b>How input works</b>
+  <a href="#channels">Ways to put data in</a>
+  <a href="#smart">Smart conversion (AI-assisted)</a>
+  <a href="#mandatory">Mandatory inputs</a>
+  <a href="#flex">Formats we accept</a>
+  <a href="#checks">Checks and error messages</a>
+  <b>Dynamic updates</b>
+  <a href="#ripple">How a change spreads</a>
+  <a href="#ripple-table">Change → effect table</a>
+  <b>Outputs</b>
+  <a href="#out-standards">Output standards</a>
+  <a href="#out-role">Outputs by role</a>
+  <a href="#matrix">Input and output rights</a>
+  <b>Building it</b>
+  <a href="#storage">Storage on PostgreSQL</a>
+  <a href="#today">Today vs target</a>
+  <a href="#questions">Decisions needed</a>
+  <a href="#phases">Build order</a>
+</nav>
+
+<main>
+<header class="cover">
+  <div class="eyebrow">ShiftSense · pilot preparation · for review by Group 24 and EXL</div>
+  <h1>ShiftSense Data Blueprint</h1>
+  <p class="lede">What data goes into ShiftSense, who provides it, how forgiving the input is, how a change spreads to rosters and decisions, and what comes out for each role. This is the agreement to build against. <b>Status 18 Oct 2026:</b> built and tested (reference data, smart conversion, change engine, approvals, situations, contracts, base pack, Data hub, downloads). Not yet: moving the rest of the app onto PostgreSQL, a scheduled watched folder, the event calendar view, call-volume based actual service levels, and the attendance feed.</p>
+  <p style="font-size:13.5px;color:var(--muted)">Draft 2 · 18 Oct 2026 · changed in this draft: any-format input with AI-assisted conversion, enforced mandatory fields, and situation-based inputs for holidays, outages, protests and disasters · terms such as "effective date" or "freeze window" are explained where they first appear and in the <a href="https://claude.ai/artifact/9kGT3mzNvQmoPkmR6FV5DB">handbook glossary</a>.</p>
+</header>
+
+<h2 id="decided">What is decided</h2>
+<ul>
+<li><b>PostgreSQL for the pilot.</b> A proper database server replaces the single SQLite file for the pilot. The local demo can keep SQLite; both go through one data layer, so the app code is the same.</li>
+<li><b>Data sources for the pilot:</b> employee details, employment contracts, client contracts with their service levels, updated rules, and any new condition (holidays, campaigns, outages, training and similar).</li>
+<li><b>Five roles stay.</b> No new role is added. Looking after reference data becomes a responsibility inside existing roles (see <a href="#owners">who owns which data</a>).</li>
+</ul>
+
+<h2 id="principles">Principles</h2>
+<div class="tbl"><table>
+<thead><tr><th>Principle</th><th>What it means in practice</th></tr></thead>
+<tbody>
+<tr><td>Accept input in any format</td><td>Excel, CSV, a pasted table, pasted free text (an email or chat message), or a manual form. Rules convert what they recognise instantly; AI converts the rest into the required format. A person checks the result before it is applied.</td></tr>
+<tr><td>Mandatory means mandatory</td><td>Each kind of data has a short list of fields that must be present. If they are missing, the system asks for them. Neither the rules nor the AI ever invent a mandatory value.</td></tr>
+<tr><td>One owner per fact</td><td>Each kind of data has one role that submits it and, where it matters, a second role that approves it. Nobody else can change it.</td></tr>
+<tr><td>Every change has an effective date</td><td>The <b>effective date</b> is the day a change starts to count. It can be today or in the future (for example a new contract from 1 November). Old versions are kept; nothing is overwritten.</td></tr>
+<tr><td>Changes spread automatically, people still decide</td><td>An updated agent, contract, rule or service level is re-checked against the roster at once. The system flags what it breaks and proposes fixes, but it never edits a published shift by itself.</td></tr>
+<tr><td>Plain-language errors, row by row</td><td>Every problem names the row, the column, what is wrong and how to fix it. Values the system can safely correct are corrected and shown. Good rows are not held back by one bad row, except for rules and contracts.</td></tr>
+<tr><td>Outputs are labelled and visual first</td><td>Every screen and file says what it is (recorded, planned or forecast), when it was produced, whether it is live or demo, and where the numbers came from. Charts always come with a one-line takeaway and the same numbers as a table.</td></tr>
+</tbody></table></div>
+
+<h2 id="owners">Who owns which data</h2>
+<p>Admin stays oversight-only, so Admin does not edit operational data (people's skills, contracts, rules). The Analyst becomes the <b>data steward</b>: the person who loads and maintains reference data, usually from HR or client files. Changes that affect cost or service promises need a second person to approve, which is Ops.</p>
+<div class="tbl"><table>
+<thead><tr><th>Data</th><th>Submits</th><th>Approves</th><th>Can also propose</th></tr></thead>
+<tbody>
+<tr><td>Employee details</td><td>Analyst (HR file or form)</td><td>Not needed, except for exits and team moves within the freeze window (Ops)</td><td>Team Lead: skill and team changes for own team · Agent: own shift and day-off preferences</td></tr>
+<tr><td>Employment contracts</td><td>Analyst</td><td>Ops</td><td>—</td></tr>
+<tr><td>Client contracts and service levels</td><td>Ops or Analyst</td><td>Ops (if the Analyst submitted)</td><td>—</td></tr>
+<tr><td>Rules and policies</td><td>Analyst</td><td>Ops</td><td>Admin: governance thresholds (Ops approves)</td></tr>
+<tr><td>Special conditions and events</td><td>Analyst (planning events) · Ops (operational events)</td><td>Ops for rule exceptions</td><td>Team Lead: training or meetings for own team</td></tr>
+<tr><td>Leave and availability</td><td>Analyst (HR file) · Agent (request) · Team Lead (sickness)</td><td>Team Lead for agent requests (as today)</td><td>—</td></tr>
+<tr><td>Call volumes</td><td>Analyst</td><td>Not needed</td><td>—</td></tr>
+<tr><td>Attendance feed</td><td>Analyst (file) or system feed</td><td>Team Lead confirms disputed records</td><td>Agent: report a record problem (as today)</td></tr>
+<tr><td>Sign-in accounts</td><td>Admin</td><td>Not needed</td><td>—</td></tr>
+</tbody></table></div>
+<p>The <b>freeze window</b> is today and any day that has already started. Changes there go through the alert-and-recovery path, never straight into the roster.</p>
+
+<!-- ============================================================ INPUTS -->
+<h2 id="in-employee">Employee details</h2>
+<p>Everything the planner and recovery engine need to know about a person. Only five fields are required; the rest improve plans when present.</p>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Required</th><th>Example</th><th>Also accepted</th></tr></thead>
+<tbody>
+<tr><td>Employee ID</td><td>Yes</td><td>A01, E-1042</td><td>Headers: Emp ID, Employee Code, Agent No., Staff ID</td></tr>
+<tr><td>Full name</td><td>Yes</td><td>Aarav Kapoor</td><td>First and last name in two columns are joined</td></tr>
+<tr><td>Team</td><td>Yes</td><td>TL-1</td><td>Team lead's name, if it matches a team lead; an unknown team can be created during import (with a warning)</td></tr>
+<tr><td>Primary queue</td><td>Yes</td><td>Claims-EN</td><td>claims en, Claims English, CLAIMS-EN, "Claims - EN"; close misspellings get a "Did you mean…" suggestion</td></tr>
+<tr><td>Contract type</td><td>Yes</td><td>Full-time 40h</td><td>Matched to the contract list; if missing, the default contract is used and a warning shown</td></tr>
+<tr><td>Other trained queues</td><td>No</td><td>Banking-EN; Claims-HI</td><td>Separated by ; , / | or new lines</td></tr>
+<tr><td>Skill level per queue</td><td>No</td><td>Claims-EN:3</td><td>1–3, or Beginner / Intermediate / Expert</td></tr>
+<tr><td>Night shifts allowed</td><td>No (default: as contract)</td><td>Yes</td><td>Y, N, 1, 0, True, False, ✓</td></tr>
+<tr><td>Preferred shift</td><td>No</td><td>Morning</td><td>M, AM, Early, 06:00</td></tr>
+<tr><td>Preferred day off</td><td>No</td><td>Saturday</td><td>Sat, 6</td></tr>
+<tr><td>Start date</td><td>No</td><td>01/11/2026</td><td>Any common date format (see <a href="#flex">formats</a>)</td></tr>
+<tr><td>Last working day</td><td>No</td><td>30 Nov 2026</td><td>Same</td></tr>
+<tr><td>Status</td><td>No (default Active)</td><td>On notice</td><td>Active, On notice, Long leave, Exited</td></tr>
+</tbody></table></div>
+<h4>How it is entered</h4>
+<ul><li><b>Analyst:</b> upload the HR export (all employees or only changed ones), or edit one person on their agent card.</li>
+<li><b>Team Lead:</b> "Propose a change" on an own-team agent (for example, finished Banking-EN training). The Analyst accepts or declines it with a reason.</li>
+<li><b>Agent:</b> updates own shift and day-off preferences on My work. These are wishes for the next plan and never force a change.</li></ul>
+<h4>What a change does</h4>
+<ul>
+<li><b>Skill removed:</b> future shifts on that queue break the "trained queues only" rule. In the freeze window, an alert goes to the team lead with a ready fix. On later days, the Analyst gets a re-plan draft.</li>
+<li><b>Skill added:</b> recovery can use the person straight away, and the next plan can too.</li>
+<li><b>Team changed:</b> ownership of their alerts, requests and reminders moves to the new team lead, and both team leads are told.</li>
+<li><b>Last working day set:</b> shifts after it are released, which shows as gaps. Pending requests after that date are closed with a reason.</li>
+<li><b>Night permission removed:</b> their night shifts are flagged the same way as a removed skill.</li>
+<li><b>Contract changed:</b> weekly hours and shift counts are re-checked from the effective date.</li>
+<li><b>Preferences changed:</b> used at the next re-plan only.</li>
+</ul>
+
+<h2 id="in-contract">Employment contracts</h2>
+<p>Today one set of working-time rules applies to everybody. Real operations have several contract types. Each agent links to one contract; each contract carries its own limits, but none can be looser than the company-wide floor in <a href="#in-rules">rules</a>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Example</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Contract name</td><td>Full-time 40h · Part-time 24h · Night-only</td><td>Required, unique</td></tr>
+<tr><td>Contracted paid hours / shifts per week</td><td>40 h · 5 shifts</td><td>What the person is paid for</td></tr>
+<tr><td>Maximum paid hours / shifts per week</td><td>50 h · 6 shifts</td><td>Hard limit</td></tr>
+<tr><td>Allowed shift types</td><td>Morning, Day</td><td>Blank means all</td></tr>
+<tr><td>Night shifts allowed / maximum per week</td><td>Yes · 4</td><td></td></tr>
+<tr><td>Minimum rest between shifts</td><td>11 h</td><td>Cannot go below the floor</td></tr>
+<tr><td>Overtime days per fortnight / maximum extension</td><td>1 · 2 h</td><td></td></tr>
+<tr><td>Hourly rate / overtime multiplier</td><td>₹250 · 2×</td><td>Used for cost views; still simulated until finance confirms</td></tr>
+<tr><td>Effective from</td><td>01 Nov 2026</td><td>Required</td></tr>
+</tbody></table></div>
+<p><b>Entered by</b> the Analyst in a contract editor, or a contracts file. <b>Approved by</b> Ops, after seeing the impact preview: how many agents are affected, shifts that would break, coverage change and cost change.</p>
+<p><b>What a change does:</b> everyone on that contract is re-checked from the effective date. Breaks in the freeze window raise alerts. Later days get a re-plan draft. Cost figures update.</p>
+
+<h2 id="in-client">Client contracts and service levels</h2>
+<p>The promise made to each client, which drives how many people each queue needs.</p>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Required</th><th>Example</th><th>Also accepted</th></tr></thead>
+<tbody>
+<tr><td>Client / line of business</td><td>Yes</td><td>InsureCo Claims</td><td></td></tr>
+<tr><td>Queue (process × language)</td><td>Yes</td><td>Claims-HI</td><td>A new queue can be created; the system then reports how many agents are trained for it</td></tr>
+<tr><td>Service level</td><td>Yes</td><td>80% in 20 s</td><td>80/20, 0.8 / 20, "80% within 20 seconds"</td></tr>
+<tr><td>Opening hours</td><td>Yes</td><td>09:00–21:00</td><td>24x7, 9am–9pm, different hours per weekday</td></tr>
+<tr><td>Average handle time</td><td>Yes</td><td>6 min</td><td>360, 360 s, 06:00, 0:06:00</td></tr>
+<tr><td>Priority</td><td>No (default Medium)</td><td>High</td><td>High / Medium / Low, sets how much a gap on this queue counts</td></tr>
+<tr><td>Penalty per missed half-hour</td><td>No</td><td>₹1,000</td><td>Left empty, cost views keep saying "Not configured"</td></tr>
+<tr><td>Contracted volume or forecast override</td><td>No</td><td>+10% from 1 Nov</td><td>Used instead of history where given</td></tr>
+<tr><td>Effective from / until</td><td>From: yes</td><td>01 Nov 2026 – 31 Mar 2027</td><td></td></tr>
+</tbody></table></div>
+<p><b>Entered by</b> Ops (who owns the client relationship), or by the Analyst for Ops to approve.</p>
+<p><b>What a change does:</b> the required number of people for that queue is recalculated from the effective date. This uses Erlang C, the standard call-centre formula. Coverage %, gaps, alert severity and the Ops tiles follow. New gaps in the freeze window raise alerts; later days get a re-plan draft.</p>
+
+<h2 id="in-rules">Rules and policies</h2>
+<p>Today these live in a configuration file and need a restart. In the pilot they move into the app, grouped, with plain labels and units, each version kept with its effective date.</p>
+<div class="tbl"><table>
+<thead><tr><th>Group</th><th>Settings (current values)</th><th>Submits → approves</th></tr></thead>
+<tbody>
+<tr><td>Working-time floor (applies to every contract)</td><td>Rest between shifts (11 h), maximum weekly hours (50), shifts per week (6), nights per week (4), overtime days per fortnight (1), daily span (11 h), extension (2 h)</td><td>Analyst → Ops</td></tr>
+<tr><td>Staffing method</td><td>Shrinkage (30%), maximum occupancy (85%), forecast history (weeks), forecast band (about 80%)</td><td>Analyst → Ops</td></tr>
+<tr><td>Requests</td><td>Spare staff needed for instant approval (1), how far ahead requests are allowed, freeze window</td><td>Analyst → Ops</td></tr>
+<tr><td>Escalation timing</td><td>Team lead deadline before Ops is told (2 h), follow-up choices (2/4/8/24 h), explanation time for governance (24 h)</td><td>Analyst → Ops</td></tr>
+<tr><td>Recovery costs</td><td>Redeployment (₹150), swap (₹200), weight per person disturbed (₹250)</td><td>Analyst → Ops</td></tr>
+<tr><td>Governance thresholds</td><td>Approval-rate gap (35 points), minimum requests (3), repeated overtime (2), repeated swaps (2), overrides (3)</td><td>Admin → Ops</td></tr>
+<tr><td>Optimiser tuning (advanced, hidden by default)</td><td>Weights for shortage, surplus, overtime, fairness, preferences, secondary queue, changes; time limit</td><td>Analyst → Ops</td></tr>
+</tbody></table></div>
+<p><b>What a change does:</b> a stricter rule triggers a full re-check, and the approver sees the impact before approving (for example "12 shifts would break, 3 of them in the freeze window"). After approval, freeze-window breaks become alerts and later days get a re-plan draft. A looser rule forces nothing; the next re-plan may use the extra room.</p>
+
+<h2 id="in-events">Special conditions and events</h2>
+<p>Situations that change demand, availability or rules for a period. Real emergencies rarely come with complete information, so each situation type asks only for the few things that are always known (<b>what, where, when it starts</b>) and treats the rest as optional, with labelled assumptions. Details can be added or corrected as the situation develops. Each update re-runs the impact check.</p>
+<div class="tbl"><table>
+<thead><tr><th>Situation</th><th>Mandatory</th><th>Optional (assumption if left empty)</th><th>What ShiftSense does</th><th>Submitted by</th></tr></thead>
+<tbody>
+<tr><td>Public holiday</td><td>Date(s); where it applies (all, site, or queues)</td><td>Volume change % (from last year's same holiday if call history exists, else none); queues closed; holiday pay multiplier</td><td>Adjusts demand and requirement; respects closures; flags gaps</td><td>Analyst</td></tr>
+<tr><td>Planned outage or maintenance</td><td>Affected system or queues; start</td><td>End (default: same day); capacity lost % (default 100% for the affected queues); handle time increase %</td><td>Reduces capacity for the window, suggests moving trained agents to unaffected queues</td><td>Ops or Analyst</td></tr>
+<tr><td>Unplanned outage</td><td>Affected system or queues; start</td><td>End (may be "unknown"); capacity lost %</td><td>Same as planned, but with an open end: re-checked every 2 hours and Ops is asked to update or close it</td><td>Ops</td></tr>
+<tr><td>Protest, strike or transport disruption</td><td>Affected location or teams; start date</td><td>End; expected absence % or named agents (default: none assumed absent until reported); work from home allowed</td><td>Shows the shifts at risk; team leads confirm actual absences; recovery uses agents outside the affected area first</td><td>Ops (team leads can report for their team)</td></tr>
+<tr><td>Disaster or emergency (flood, storm, earthquake, fire, epidemic)</td><td>Affected location or teams; start</td><td>Everything else, including end ("unknown" allowed), number affected, work from home, relaxed targets</td><td><b>Safety first:</b> affected agents are marked unavailable and never asked to cover. Recovery looks to unaffected teams and sites. Ops can declare <b>continuity mode</b>: temporarily lowered service targets, which needs a reason and expires on a date</td><td>Ops</td></tr>
+<tr><td>Campaign or promotion</td><td>Queues; start and end; volume change %</td><td>Hours of day affected (default: all opening hours)</td><td>Raises demand for the window</td><td>Analyst</td></tr>
+<tr><td>Training or team meeting</td><td>Agents or team; start and end</td><td>Reason</td><td>Marks them unavailable; flags gaps</td><td>Team Lead (own team) or Analyst</td></tr>
+<tr><td>New queue launch</td><td>Queue name; start date; service level; opening hours; handle time</td><td>Expected volume</td><td>Creates the requirement; warns if too few agents are trained</td><td>Ops or Analyst</td></tr>
+<tr><td>Temporary rule exception</td><td>Which rule; new value; start and end; reason</td><td>—</td><td>Applies only inside the window; always needs Ops approval</td><td>Ops</td></tr>
+<tr><td>Other</td><td>Title; start; what it affects (at least one queue, team, site or agent); description</td><td>Effect (AI can propose one from the description; a person confirms)</td><td>As confirmed</td><td>Ops or Analyst</td></tr>
+</tbody></table></div>
+<ul>
+<li><b>Quick report:</b> in an emergency, a person can paste or type a few sentences ("Heavy flooding in Lucknow, TL-3 and TL-4 can't reach the office from 2 pm"). The system turns it into a draft situation with the mandatory fields filled where the text says so, and asks for anything missing.</li>
+<li><b>Open-ended situations</b> stay active until closed and remind Ops to update them every 2 hours (a setting).</li>
+<li><b>Everyone sees why numbers moved:</b> active situations appear on a shared calendar and as a banner on affected screens.</li>
+</ul>
+
+<h2 id="in-leave">Leave and availability</h2>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Required</th><th>Also accepted</th></tr></thead>
+<tbody>
+<tr><td>Employee ID</td><td>Yes</td><td>As in employee details</td></tr>
+<tr><td>Date or date range</td><td>Yes</td><td>One date column, "From" and "To" columns, or "12–14 Oct"</td></tr>
+<tr><td>Type</td><td>No (default Annual)</td><td>Annual, Sick, Unpaid, Training, Other</td></tr>
+<tr><td>Status</td><td>No (default Approved for HR files)</td><td>Approved, Requested</td></tr>
+<tr><td>Half day / note</td><td>No</td><td>AM / PM</td></tr>
+</tbody></table></div>
+<p>Sources: the HR leave file (Analyst), agents' own requests and team leads' sickness reports (as today). <b>What it does:</b> shifts on approved leave are released. Near-term ones go to recovery, later ones into a re-plan draft. A conflicting pending request is answered automatically with the reason.</p>
+
+<h2 id="in-volume">Call volumes</h2>
+<p>Actual calls per queue are the missing piece for forecast accuracy and real service-level reporting.</p>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Date</td><td>Yes</td><td>Any common format</td></tr>
+<tr><td>Time slot</td><td>Recommended</td><td>Half-hour or hour start. Daily totals are accepted and spread using the usual daily pattern, marked "estimated split".</td></tr>
+<tr><td>Queue</td><td>Yes</td><td>Matched like employee queues</td></tr>
+<tr><td>Calls offered</td><td>Yes</td><td></td></tr>
+<tr><td>Calls answered, answered within target, actual handle time</td><td>No</td><td>Enable actual service-level reports</td></tr>
+</tbody></table></div>
+<p>Submitted by the Analyst from the telephony system's export, ideally daily. <b>What it does:</b> the next forecast uses the new history (each forecast version is kept). Forecast accuracy changes from "Unavailable" to a measured figure, and actual service level can be shown next to planned coverage.</p>
+
+<h2 id="in-attendance">Attendance feed (optional)</h2>
+<p>Employee ID, date, login time and logout time, from badge or telephony logins. It makes lateness exact to the minute (today it is known to the half-hour). A missing login still never becomes a no-show on its own: the team lead confirms.</p>
+
+<h2 id="in-accounts">Sign-in accounts</h2>
+<p>Username, name, role, team, linked employee ID, work email, contact preference and active flag, maintained by Admin as today. With single sign-on later, roles can come from company directory groups. This is part of the separate sign-in work.</p>
+
+<!-- ============================================================ CHANNELS -->
+<h2 id="channels">Ways to put data in</h2>
+<div class="cols">
+<div class="note"><b>Manual form.</b> One record at a time: plain labels with units, drop-downs where possible, problems shown as you type, and an impact preview before saving ("this affects 3 shifts this week").</div>
+<div class="note"><b>Excel or CSV file.</b> Any layout: our template, an HR export, a hand-made sheet, dates across columns, merged headers. Drag it in and pick the sheet if there are several.</div>
+<div class="note"><b>Copy and paste.</b> A table copied from Excel or Google Sheets, or plain text such as an email or chat message ("Aarav and Sneha are off 12 to 14 Oct for training").</div>
+<div class="note"><b>Round-trip and scheduled files.</b> Download current data as a filled template, edit, upload back, and see only what changed. HR and telephony exports dropped in an agreed folder are picked up on a schedule.</div>
+</div>
+<p>All four end in the same place: the same checks, the same preview, the same confirmation, the same log.</p>
+
+<h2 id="smart">Smart conversion (AI-assisted)</h2>
+<p>Turns whatever was given into ShiftSense's required format. It follows the product rule set earlier: deterministic rules first because they are instant and exact, AI only for what rules cannot read, and a person always confirms.</p>
+<div class="flow"><span>Read the input</span><i>→</i><span>Rules convert what they recognise</span><i>→</i><span>AI converts the rest</span><i>→</i><span>Checks + mandatory fields</span><i>→</i><span>Side-by-side preview</span><i>→</i><span>Person confirms</span><i>→</i><span>Apply and log</span></div>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>Read</td><td>Files, pasted tables and pasted text are read as they are. Title rows, blank rows, merged cells and multiple sheets are handled.</td></tr>
+<tr><td>Rules first</td><td>Known headers, saved mappings from earlier uploads, and the value formats listed below are converted without AI. A file in a shape seen before usually needs no AI at all.</td></tr>
+<tr><td>AI for the rest</td><td>Unknown headers ("Desig.", "Proc/Lang"), unusual layouts (one column per date, a roster grid, codes like "M/E/N/WO"), and free text are turned into structured rows. Each converted value carries a confidence level and a link back to the exact cell or sentence it came from.</td></tr>
+<tr><td>Checks</td><td>Exactly the same checks as any other input: valid queues and teams, date sense, duplicates, hard rules. Mandatory fields are checked last; anything missing is listed for the person to fill in.</td></tr>
+<tr><td>Preview</td><td>Original next to converted. Corrected values are marked, low-confidence values are highlighted, and missing mandatory fields are shown as empty boxes to fill in place.</td></tr>
+<tr><td>Confirm and learn</td><td>The person accepts, edits or rejects each row. Accepted column matches are saved, so the next file from the same source converts with rules alone.</td></tr>
+</tbody></table></div>
+<h4>Guardrails</h4>
+<ul>
+<li><b>Never invents.</b> If a mandatory value isn't in the input, it stays empty and the person is asked. A guessed date, ID or queue is never applied unconfirmed.</li>
+<li><b>Never applies.</b> AI output is only a proposal. Approval and all checks happen exactly as for manual input.</li>
+<li><b>Sends as little as possible.</b> For mapping columns, only headers and a few sample rows go to the AI. Full content goes only for free text that has to be read. Passwords and account data are never sent.</li>
+<li><b>Can be switched off.</b> Without AI, rules, saved mappings and manual column matching still work. Free text then has to be entered through the form.</li>
+<li><b>Logged.</b> Each applied change records "converted by rules" or "converted by AI", who confirmed it, and the original input.</li>
+<li><b>Before the pilot:</b> sending employee data to an AI provider needs EXL's data-processing agreement, or an AI model hosted inside EXL. Until then the pilot runs with AI conversion switched off or on non-personal data only (for example call volumes and event descriptions).</li>
+</ul>
+
+<h2 id="mandatory">Mandatory inputs</h2>
+<p>The minimum that must be present for each kind of data. Everything else is optional, and where a default is used it is labelled "assumed".</p>
+<div class="tbl"><table>
+<thead><tr><th>Data</th><th>Mandatory</th><th>If missing</th></tr></thead>
+<tbody>
+<tr><td>Employee details</td><td>Employee ID, full name, team, primary queue, contract type</td><td>Row held back. Contract type can fall back to the default contract only after the person confirms.</td></tr>
+<tr><td>Employment contract</td><td>Name, contracted hours and shifts per week, effective from</td><td>Not saved. Limits not given take the company-wide floor (shown).</td></tr>
+<tr><td>Client contract / service level</td><td>Client, queue, service level (% and seconds), opening hours, average handle time, effective from</td><td>Not saved</td></tr>
+<tr><td>Rule change</td><td>Which rule, new value, effective from, reason</td><td>Not saved</td></tr>
+<tr><td>Leave</td><td>Employee ID, date or date range</td><td>Row held back</td></tr>
+<tr><td>Call volumes</td><td>Date, queue, calls offered</td><td>Row held back</td></tr>
+<tr><td>Attendance feed</td><td>Employee ID, date, login time</td><td>Row held back</td></tr>
+<tr><td>Special situation</td><td>Depends on the situation (see <a href="#in-events">special conditions</a>): always what, where and when it starts</td><td>Not saved; the form asks only for the missing items</td></tr>
+</tbody></table></div>
+
+<h2 id="flex">Formats we accept</h2>
+<div class="tbl"><table>
+<thead><tr><th>What</th><th>Accepted</th></tr></thead>
+<tbody>
+<tr><td>Files</td><td>.xlsx, .xls, .csv, .tsv, or a table pasted from Excel or Google Sheets. Title rows above the header, blank rows and extra columns are skipped and listed. A file with several sheets asks which one.</td></tr>
+<tr><td>Column headers</td><td>Any order, any case, extra spaces, common synonyms. Suggestions can be overridden. A mapping is remembered per file source for next time.</td></tr>
+<tr><td>Dates</td><td>2026-10-12, 12/10/2026, 12-10-2026, 12-Oct-2026, 12 Oct 2026, 12 Oct, Excel date numbers. Day-first by default (Indian convention); an ambiguous file (for example only dates up to the 12th) is flagged for confirmation.</td></tr>
+<tr><td>Times</td><td>6, 06:00, 6am, 6.30 pm, 18:30</td></tr>
+<tr><td>Durations</td><td>6 min, 360 s, 360 (seconds assumed and shown), 06:00, 0:06:00, 8h, 8 hours</td></tr>
+<tr><td>Yes / No</td><td>Yes, No, Y, N, 1, 0, True, False, ✓, ✗</td></tr>
+<tr><td>Lists</td><td>Separated by ; , / | or line breaks inside a cell</td></tr>
+<tr><td>Percentages</td><td>80%, 0.8, 80</td></tr>
+<tr><td>Service levels</td><td>80/20, 80% in 20s, 80% within 20 seconds</td></tr>
+<tr><td>Names of queues, teams, contracts, shifts</td><td>Case and spacing ignored. Close matches suggested ("claims hindi" → Claims-HI). Never silently guessed when two matches are possible.</td></tr>
+</tbody></table></div>
+
+<h2 id="checks">Checks and error messages</h2>
+<div class="tbl"><table>
+<thead><tr><th>Level</th><th>Meaning</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><span class="pill crit">Error</span></td><td>That row cannot be used until fixed</td><td>Row 14, Employee ID: missing. Add the ID used in HR records.</td></tr>
+<tr><td><span class="pill warn">Check</span></td><td>Usable, but confirm it is intended</td><td>Row 22, Team: "TL-7" doesn't exist yet. It will be created if you continue.</td></tr>
+<tr><td><span class="pill info">Corrected</span></td><td>Safely fixed and shown</td><td>Row 5, Primary queue: "claims en" read as Claims-EN.</td></tr>
+</tbody></table></div>
+<ul>
+<li><b>Employees, leave, volumes, attendance:</b> good rows can be applied while bad rows are held back. A "rows to fix" Excel file comes back with an extra column explaining each problem; fix it and upload just that file.</li>
+<li><b>Contracts, client service levels, rules:</b> all or nothing. A half-applied rule set would be unsafe.</li>
+<li><b>Duplicates and stale files:</b> the same employee twice in one file is an error. A round-trip file edited after someone else changed the same records gets a warning listing those records.</li>
+<li><b>Every applied change is logged</b> with who, when, the file or form it came from, before and after values, and the effective date. A data change can be reversed by applying the previous version, which is also logged.</li>
+</ul>
+
+<!-- ============================================================ RIPPLE -->
+<h2 id="ripple">How a change spreads</h2>
+<div class="flow"><span>Submit</span><i>→</i><span>Check</span><i>→</i><span>Impact preview</span><i>→</i><span>Approve (where needed)</span><i>→</i><span>Apply on the effective date</span><i>→</i><span>Re-check roster and decisions</span><i>→</i><span>Act: alerts, re-plan draft, notices</span><i>→</i><span>Log</span></div>
+<ul>
+<li><b>Impact preview</b> before anything is applied: which people, shifts, queues, requests and alerts are touched, plus coverage and cost before and after.</li>
+<li><b>Freeze window</b> (today and started days): problems become alerts for the team lead with a ready fix, exactly like an absence today.</li>
+<li><b>Later days:</b> the Analyst gets a re-plan draft built automatically, labelled with the change that caused it. It still needs validate, review and publish.</li>
+<li><b>Future-dated changes</b> are stored and applied when their effective date arrives, with the same re-check at that moment.</li>
+<li><b>No silent change:</b> the system never edits a published shift on its own. It flags, proposes and notifies.</li>
+<li><b>People affected are told:</b> the agent (for their own record), their team lead, and Ops for anything that changes service promises or cost.</li>
+</ul>
+
+<h2 id="ripple-table">Change → effect table</h2>
+<div class="tbl"><table>
+<thead><tr><th>Change</th><th>Recalculated</th><th>Automatic action</th><th>Told</th></tr></thead>
+<tbody>
+<tr><td>Skill removed / night permission removed</td><td>Rule check of that agent's future shifts</td><td>Freeze window: alert with fix · later: re-plan draft</td><td>Agent, team lead, Analyst</td></tr>
+<tr><td>Skill added</td><td>Recovery options, eligible counts per queue</td><td>None forced; better options appear</td><td>Analyst (readiness count)</td></tr>
+<tr><td>Team moved</td><td>Ownership of alerts, requests, reminders, threads</td><td>Records move to the new team lead</td><td>Both team leads, agent</td></tr>
+<tr><td>Joiner (start date)</td><td>Available capacity from that date</td><td>Re-plan draft includes them</td><td>Analyst, team lead</td></tr>
+<tr><td>Leaver (last working day)</td><td>Shifts after that date</td><td>Shifts released → alerts / re-plan draft; pending requests closed</td><td>Team lead, Ops, agent</td></tr>
+<tr><td>Contract changed (agent or contract type)</td><td>Hours, shift counts, nights, costs</td><td>Breaks → alerts / re-plan draft; cost views update</td><td>Agent, team lead, Ops</td></tr>
+<tr><td>Service level, opening hours or handle time changed</td><td>Required people per half-hour (Erlang C), coverage, severity</td><td>New gaps → alerts / re-plan draft</td><td>Ops, Analyst, affected team leads</td></tr>
+<tr><td>New queue</td><td>Requirement for the new queue, trained-agent count</td><td>Readiness warning if too few are trained</td><td>Ops, Analyst</td></tr>
+<tr><td>Rule tightened</td><td>Full roster re-check</td><td>Breaks → alerts / re-plan draft</td><td>Ops, Analyst, team leads</td></tr>
+<tr><td>Rule loosened</td><td>Nothing forced</td><td>Next re-plan may improve</td><td>Analyst</td></tr>
+<tr><td>Event added (holiday, campaign, outage, training)</td><td>Demand or availability for the window</td><td>Gaps → alerts / re-plan draft; shown on the event calendar</td><td>Ops, affected team leads</td></tr>
+<tr><td>Approved leave loaded</td><td>Shifts on those days</td><td>Released → recovery / re-plan draft; conflicting requests answered</td><td>Agent, team lead</td></tr>
+<tr><td>Call volumes loaded</td><td>Forecast (new version), forecast accuracy, actual service level</td><td>Required people change → coverage views update</td><td>Analyst, Ops</td></tr>
+<tr><td>Agent preference changed</td><td>Nothing immediately</td><td>Used at next re-plan</td><td>—</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ OUTPUTS -->
+<h2 id="out-standards">Output standards</h2>
+<ul>
+<li><b>Visual first, numbers always available.</b> Each view has a chart or grid, a one-line takeaway ("Claims-HI is 6 people-hours short on Thursday evening"), and a Data button with the same numbers as a table.</li>
+<li><b>Same visual language everywhere.</b> Recorded figures in solid colour, planned in outline, forecast as a shaded band. Status colours are the same on every screen and in every file.</li>
+<li><b>Plain column names with units</b> ("Gap (people-hours)", "Cost (₹, configured rates)"). People's names next to IDs.</li>
+<li><b>Every file explains itself.</b> Excel exports include a "Read me" sheet: what it is, as-of time, live or demo, source, definitions of every column, and what is recorded, planned or forecast. Header rows are frozen and formatted.</li>
+<li><b>Formats:</b> Excel for working files, CSV for other systems, calendar files (.ics) for personal schedules, and a print-friendly page for schedules and briefs.</li>
+<li><b>Scoped by role on the server:</b> an export contains exactly what that person may see, and the export itself is logged.</li>
+</ul>
+
+<h2 id="out-role">Outputs by role</h2>
+<div class="tbl"><table>
+<thead><tr><th>Role</th><th>On screen</th><th>To download</th></tr></thead>
+<tbody>
+<tr><td>Agent</td><td>My schedule (calendar view), hours against contract, request status, my history</td><td>Schedule to phone or Outlook calendar (.ics), my schedule (Excel), my history (CSV)</td></tr>
+<tr><td>Team Lead</td><td>Team schedule grid, attendance today with late check-ins, alerts and decisions, team history, events affecting the team</td><td>Team schedule (Excel and print view), weekly team pack (coverage, attendance, overtime, requests), team history</td></tr>
+<tr><td>Ops</td><td>Control tower, Decide first, coverage heat-map by client contract and queue, cost against budget, recovery performance, event calendar, data changes affecting service</td><td>Daily operations brief (one page and Excel), service-level risk report per client contract, cost report, recovery performance</td></tr>
+<tr><td>Analyst</td><td>Forecast against required and scheduled per half-hour, plan comparison and change list, what-if comparisons, import results, data quality dashboard (agents without a contract, queues with too few trained agents, missing skills), change calendar by effective date</td><td>Published roster (by agent, by queue, by day), forecast and requirement (per half-hour), plan change list, what-if comparison, rows-to-fix files, current reference data as round-trip templates</td></tr>
+<tr><td>Admin</td><td>Audit and integrity, data change log (who changed what reference data, before and after), accounts, governance cases</td><td>Audit trail, data change log, account list, governance case pack</td></tr>
+<tr><td>For clients (prepared by Ops)</td><td>—</td><td>Service-level coverage report per client contract: planned coverage now, actual service once call volumes are loaded</td></tr>
+</tbody></table></div>
+
+<h2 id="matrix">Input and output rights</h2>
+<p>S = submits, A = approves, P = can propose, V = views, E = exports. Every right is enforced on the server.</p>
+<div class="tbl"><table>
+<thead><tr><th>Data</th><th>Agent</th><th>Team Lead</th><th>Ops</th><th>Analyst</th><th>Admin</th></tr></thead>
+<tbody>
+<tr><td>Employee details</td><td>P own preferences · V own</td><td>P own team · V/E team</td><td>A exits in freeze window · V/E</td><td>S · V/E</td><td>V (change log only)</td></tr>
+<tr><td>Employment contracts</td><td>V own contract</td><td>V</td><td>A · V/E</td><td>S · V/E</td><td>V</td></tr>
+<tr><td>Client contracts and service levels</td><td>—</td><td>V queues of own team</td><td>S/A · V/E</td><td>S · V/E</td><td>V</td></tr>
+<tr><td>Rules and policies</td><td>V (plain summary)</td><td>V</td><td>A · V/E</td><td>S · V/E</td><td>P governance thresholds · V</td></tr>
+<tr><td>Special conditions and events</td><td>V own</td><td>S own-team training · V</td><td>S/A · V/E</td><td>S · V/E</td><td>V</td></tr>
+<tr><td>Leave and availability</td><td>S own request · V own</td><td>A requests · S sickness · V/E team</td><td>A requests · V/E</td><td>S HR file · V/E</td><td>V</td></tr>
+<tr><td>Call volumes</td><td>—</td><td>—</td><td>V/E</td><td>S · V/E</td><td>—</td></tr>
+<tr><td>Attendance feed</td><td>V own · P problem</td><td>A disputes · V/E team</td><td>V/E</td><td>S · V/E</td><td>V</td></tr>
+<tr><td>Sign-in accounts</td><td>V own</td><td>—</td><td>—</td><td>—</td><td>S · V/E</td></tr>
+<tr><td>Rosters and reports</td><td>V/E own</td><td>V/E team</td><td>V/E all</td><td>V/E all</td><td>V/E all (read only)</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ STORAGE -->
+<h2 id="storage">Storage on PostgreSQL</h2>
+<p>Today the whole workspace is saved as one block in SQLite. For the pilot, data is stored as proper tables, each change versioned by effective date.</p>
+<div class="tbl"><table>
+<thead><tr><th>Area</th><th>Tables</th></tr></thead>
+<tbody>
+<tr><td>People</td><td>employees, employee_skills, employee_preferences, teams</td></tr>
+<tr><td>Agreements</td><td>contract_types (versioned), client_contracts, queues, service_levels (versioned)</td></tr>
+<tr><td>Rules and events</td><td>rule_sets (versioned, effective-dated), events</td></tr>
+<tr><td>Time off and actuals</td><td>leave, call_volumes, attendance_events</td></tr>
+<tr><td>Plans</td><td>plans, plan_shifts (each roster version as rows), roster_changes</td></tr>
+<tr><td>Change control</td><td>change_requests (submitted, approved, applied, reversed, with before and after), imports (file, column matches, results), saved column mappings</td></tr>
+<tr><td>Operations (moved as they are)</td><td>alerts, requests, notifications, messages, reminders, emails, cases, what-if runs, accounts</td></tr>
+<tr><td>Audit</td><td>audit_log with the same hash chain; write-only for the app's database user</td></tr>
+</tbody></table></div>
+<p>One data layer serves both PostgreSQL (pilot) and SQLite (local demo). Schema changes go through numbered migrations. Backups use PostgreSQL's own tools on a schedule with retention, and the restore drill works against them. Several app servers can then run safely, because locking moves into the database.</p>
+
+<h2 id="today">Today vs target</h2>
+<div class="tbl"><table>
+<thead><tr><th>Area</th><th>Today</th><th>Target for the pilot</th></tr></thead>
+<tbody>
+<tr><td>Employee data</td><td>Only by a whole-workspace import that replaces everything and rebuilds the roster</td><td>Per-person or partial updates, round-trip templates, effective dates, ripple to roster and decisions</td></tr>
+<tr><td>Contracts</td><td>One global rule set for everyone</td><td>Contract types per agent, under a company-wide floor</td></tr>
+<tr><td>Service levels</td><td>One per queue, fixed in a configuration file</td><td>Per client contract, dated, with opening hours and priority</td></tr>
+<tr><td>Rules</td><td>Configuration file, restart required</td><td>In-app, versioned, approved by a second person, with impact preview</td></tr>
+<tr><td>Special conditions</td><td>Only call spikes reported by Ops</td><td>Holidays, campaigns, outages, training, closures, new queues, rule exceptions</td></tr>
+<tr><td>Call volumes</td><td>Synthetic history only</td><td>Imported actuals; measured forecast accuracy and actual service level</td></tr>
+<tr><td>File handling</td><td>Header matching and row checks; all-or-nothing</td><td>Also: Excel sheets, paste, flexible values, rows-to-fix files, partial apply for people data, remembered mappings</td></tr>
+<tr><td>Outputs</td><td>Screens, weekly Excel, history CSV, audit CSV</td><td>Role packs, Read me sheets, calendar files, print views, client service-level reports, data quality dashboard</td></tr>
+<tr><td>Storage</td><td>One SQLite file, one server</td><td>PostgreSQL tables, migrations, scheduled backups, several servers</td></tr>
+</tbody></table></div>
+
+<h2 id="questions">Decisions needed</h2>
+<div class="tbl"><table>
+<thead><tr><th>Question</th><th>Proposal</th></tr></thead>
+<tbody>
+<tr><td>Who approves contract, rule and service-level changes?</td><td>Analyst submits, Ops approves. Governance thresholds: Admin proposes, Ops approves.</td></tr>
+<tr><td>Is the Analyst the data steward for HR data, instead of a sixth role?</td><td>Yes. Five roles stay.</td></tr>
+<tr><td>May good rows of a people file be applied while bad rows are held back?</td><td>Yes for employees, leave, volumes and attendance; never for contracts, rules and service levels.</td></tr>
+<tr><td>Date format default?</td><td>Day-first (12/10/2026 is 12 October), with ambiguous files flagged.</td></tr>
+<tr><td>May agents change their own shift and day-off preferences without approval?</td><td>Yes, because preferences are wishes for the next plan and never force a change.</td></tr>
+<tr><td>How do pilot files arrive?</td><td>Decided: manual form, Excel, CSV and copy-paste in the app. Proposed addition: one watched folder for scheduled HR and telephony exports.</td></tr>
+<tr><td>Which HR and telephony exports will EXL provide, and how often?</td><td>Needed: a sample of each (any format) to tune column matching.</td></tr>
+<tr><td>AI conversion of employee data in the pilot?</td><td>Only once EXL confirms a data-processing agreement or an internally hosted model. Until then: rules, saved mappings and manual matching for people data; AI for call volumes and situation descriptions.</td></tr>
+<tr><td>Who may declare continuity mode (temporarily lowered targets) in a disaster?</td><td>Ops, with a reason and an end date; Admin sees it in the decision log.</td></tr>
+<tr><td>How often should open-ended situations be re-checked?</td><td>Every 2 hours, as a setting.</td></tr>
+<tr><td>Clear the unused phone and SMS-consent columns?</td><td>Yes, after a backup, as part of the PostgreSQL move.</td></tr>
+</tbody></table></div>
+
+<h2 id="phases">Build order</h2>
+<ol>
+<li><b>Foundation:</b> the data layer on PostgreSQL (with SQLite for the demo), proper tables, migrations, moving current data across, scheduled backups.</li>
+<li><b>Change engine:</b> change requests with effective dates, approval, impact preview, apply, re-check, alerts and re-plan drafts, data change log.</li>
+<li><b>People and leave:</b> employee forms, team-lead proposals, agent preferences, smart conversion (rules first, AI for the rest, side-by-side preview, mandatory-field prompts, saved mappings), rows-to-fix files, partial apply, round-trip templates.</li>
+<li><b>Agreements, rules and situations:</b> contract types, client contracts and service levels, in-app rules with versions, situation forms (holiday, outage, protest, disaster and others) with quick report and continuity mode, shared calendar.</li>
+<li><b>Outputs:</b> role packs with Read me sheets, calendar files, print views, client service-level report, data quality dashboard.</li>
+<li><b>Actuals:</b> call volume import (forecast accuracy, actual service level), optional attendance feed.</li>
+<li><b>Sign-in hardening</b> alongside: password change and reset, password rules, lockout, session timeout, then single sign-on.</li>
+</ol>
+
+<footer>ShiftSense Data Blueprint · draft 2 for review · Group 24 (Saswata Saha, Supratik Sarkar) · companion to the ShiftSense Handbook · all current figures simulated</footer>
+</main>
+</div>

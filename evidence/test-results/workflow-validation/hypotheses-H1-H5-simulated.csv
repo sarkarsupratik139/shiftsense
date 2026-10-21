@@ -1,0 +1,6 @@
+Hypothesis,Statement,Measured (simulated),Pass
+H1,Planning efficiency: roster preparation effort falls ≥ 70%,"92% less effort (400 → 30.1 min); coverage 90.9% vs 75.4%, fairness std 1.60 vs 1.85",True
+H2,Service: under-covered workload falls ≥ 20% at equal or lower paid hours,24.6% → 9.1% (63% lower); paid hours 3824 vs 3824,True
+H3,Recovery speed: median simulated Time-to-Cover under 10 minutes,"median 7.0 min MODELLED (configured approval + confirmation minutes + measured solver time, median 0.11 s); manual process on the SAME rosters and disruptions 58 min MODELLED",True
+H4,Recovery economics: equal coverage restored at lower cost than OT-first recovery,"at the manual process's restored coverage, ShiftSense median ₹4,950 vs ₹9,500 OT-first; cheaper in 100% of 8 scenarios",True
+H5,Operational safety: zero hard-constraint violations,"0 violations across 3 plans, 1 re-plan and 32 recoveries (independent checker)",True

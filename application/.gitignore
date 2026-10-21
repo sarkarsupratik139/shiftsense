@@ -1,0 +1,11 @@
+# Python and tools
+*.pyc
+__pycache__/
+.venv/
+.pytest_cache/
+.DS_Store
+# Secrets and environment (never commit)
+.env
+.streamlit/secrets.toml
+# Runtime data (database, logs, backups, drop folder): created on first start
+data/
